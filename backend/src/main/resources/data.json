@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Жилые дома трехэтажные",
+        "description": "Жилые дома трехэтажные со стенами каменной кладки толщиной 45 см и более с улучшенными элементами и оборудованием по типу 'Евростандарт'",
+        "characteristics": [
+            {
+                "name": "Фундамент",
+                "description": "Каменные или бетонные"
+            },
+            {
+                "name": "Стены",
+                "description": "Сплошной кладки или облегченной конструкции"
+            }
+        ],
+        "volumeBasedCosts": [
+            {
+                "volumeFrom": 0,
+                "volumeTo": 1000,
+                "cost": 76
+            },
+            {
+                "volumeFrom": 1000,
+                "volumeTo": 1500,
+                "cost": 69
+            }, 
+            {
+                "volumeFrom": 1500,
+                "volumeTo": 9999,
+                "cost": 63
+            } 
+        ],
+        "adjustments": [
+            {
+                "adjustmentElement": "Кровля из черепицы",
+                "adjustmentCost": 2.1
+            },
+            {
+                "adjustmentElement": "Кровля из асбестоцементных листов",
+                "adjustmentCost": -2.7
+            }
+        ]    
+    }
+]
+    
