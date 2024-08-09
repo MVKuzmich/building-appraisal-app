@@ -25,11 +25,13 @@ public class DataLoader {
     @PostConstruct
     public void loadData() {
         try {
+            if(repository.count() == 0) {
             InputStream inputStream = resourceLoader.getResource("classpath:data.json").getInputStream();
             ObjectMapper mapper = new ObjectMapper();
             List<BuildingType> entities = List.of(mapper.readValue(inputStream, BuildingType[].class));
             
             repository.saveAll(entities);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
