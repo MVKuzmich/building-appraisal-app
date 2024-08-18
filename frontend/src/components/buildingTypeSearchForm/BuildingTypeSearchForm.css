@@ -1,0 +1,51 @@
+.search-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the form horizontally */
+  justify-content: center; /* Center the form vertically if needed */
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 600px; /* Limit the width of the form */
+}
+
+.form-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ensure the form container takes full width within the max-width */
+}
+
+.form-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center; /* Center the heading */
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+  justify-content: space-between; /* Distribute space evenly */
+}
+
+.form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-field .MuiFormControl-root {
+  width: 100%;
+  height: 56px; /* Ensure consistent input height */
+}
+
+.submit-button {
+  height: 56px; /* Ensure button height matches input height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Make button take full width of its container */
+}

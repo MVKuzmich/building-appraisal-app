@@ -8,7 +8,7 @@ const TechnicalPassportForm = () => {
     return (
       <div className="technical-passport-container">
         <div className="form-container">
-          <h2>Информация о строении в техническом паспорте</h2>
+          <h2>Информация о строении</h2>
           <Formik
             initialValues={{
               buildingType: '',
