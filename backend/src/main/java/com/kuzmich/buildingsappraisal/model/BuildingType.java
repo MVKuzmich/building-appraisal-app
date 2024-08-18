@@ -12,11 +12,13 @@ import lombok.Data;
 public class BuildingType {
 
     @Id
-    private String id;
+    private String type;
     private String name;
     private String description;
-    private List<Characteristic> characteristics;
+    private String basedCostsDependency;
+    private String normAppliance;
     private List<VolumeBasedCost> volumeBasedCosts;
     private List<Adjustment> adjustments;
+    private List<String> notes;
     
 }

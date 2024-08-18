@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class VolumeBasedCost {
-    private double volumeFrom;
-    private double volumeTo;
+    private String volumeFrom;
+    private String volumeTo;
     private double cost;
     
 }
