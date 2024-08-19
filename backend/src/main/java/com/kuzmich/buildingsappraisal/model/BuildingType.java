@@ -15,6 +15,7 @@ public class BuildingType {
     private String type;
     private String name;
     private String description;
+    private EstimationSheetData estimationSheetData;
     private String basedCostsDependency;
     private String normAppliance;
     private List<VolumeBasedCost> volumeBasedCosts;

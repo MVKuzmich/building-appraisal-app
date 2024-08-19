@@ -6,7 +6,7 @@ import lombok.Data;
 public class Adjustment {
 
     private String adjustmentGroup;
-    private String adjustmentElement;
+    private String[] adjustmentElement;
     private double adjustmentCost;
     
 }

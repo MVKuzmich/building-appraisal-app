@@ -3453,6 +3453,11 @@
         "type": "46",
         "name": "Бани одноэтажные четырехстенные с каменными или деревянными рублеными стенами",
         "description": "Фундаменты каменные или бетонные. Перекрытие деревянное. Перегородки каменные, деревянные. Кровля из асбестоцементных волнистых листов. Полы цементные, дощатые. Окна деревянные простые. Двери филенчатые. Отопление печное. Строение с водопроводом и канализацией. Строение электрифицировано. Внутренняя отделка: обшивка стен и потолков досками обшивки, окраска.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "кам./рубл.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Объем строения",
         "normAppliance": "на 1 куб.м типичного строения",
         "volumeBasedCosts": [
@@ -3470,62 +3475,62 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 1.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из черепицы",
+                "adjustmentElement": ["Кровля из черепицы", "черепица"],
                 "adjustmentCost": 14.3
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 8.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 0.6
             },
             {
                 "adjustmentGroup": "Стены внутри",
-                "adjustmentElement": "Без внутренней отделки",
+                "adjustmentElement": ["Без внутренней отделки", "без отделки"],
                 "adjustmentCost": -6.5
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 3.4
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом керамическим",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом керамическим", "керам.кирпич"],
                 "adjustmentCost": 5.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом силикатным",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом силикатным", "силик.кирпич"],
                 "adjustmentCost": 3.7
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная обшивка стен защитным покрытием 'САЙДИНГ'",
+                "adjustmentElement": ["Наружная обшивка стен защитным покрытием 'САЙДИНГ'", "сайдинг"],
                 "adjustmentCost": 12.3
             },
             {
                 "adjustmentGroup": "Окна",
-                "adjustmentElement": "Окна: стеклопакеты",
+                "adjustmentElement": ["Окна: стеклопакеты", "стеклопакеты"],
                 "adjustmentCost": 6.2
             },
             {
                 "adjustmentGroup": "Отопление",
-                "adjustmentElement": "Отопление от котла отопительного",
+                "adjustmentElement": ["Отопление от котла отопительного", "котел"],
                 "adjustmentCost": -0.4
             }
         ],
@@ -3535,6 +3540,11 @@
         "type": "47",
         "name": "Бани одноэтажные трехстенные с каменными или деревянными рублеными стенами",
         "description": "Фундаменты каменные или бетонные. Перекрытие деревянное. Перегородки каменные, деревянные. Кровля из асбестоцементных волнистых листов. Полы цементные, дощатые. Окна: стеклопакеты. Двери филенчатые. Отопление печное. Строение с водопроводом и канализацией. Строение электрифицировано. Внутренняя отделка: обшивка стен и потолков досками обшивки, окраска.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "кам./рубл.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Объем строения",
         "normAppliance": "на 1 куб.м типичного строения",
         "volumeBasedCosts": [
@@ -3552,62 +3562,62 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 1.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из черепицы",
+                "adjustmentElement": ["Кровля из черепицы", "черепица"],
                 "adjustmentCost": 14.3
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 8.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 0.6
             },
             {
                 "adjustmentGroup": "Стены внутри",
-                "adjustmentElement": "Без внутренней отделки",
+                "adjustmentElement": ["Без внутренней отделки", "без отделки"],
                 "adjustmentCost": -6.5
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 3.4
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом керамическим",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом керамическим", "керам.кирпич"],
                 "adjustmentCost": 5.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом силикатным",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом силикатным", "силик.кирпич"],
                 "adjustmentCost": 3.7
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная обшивка стен защитным покрытием 'САЙДИНГ'",
+                "adjustmentElement": ["Наружная обшивка стен защитным покрытием 'САЙДИНГ'", "сайдинг"],
                 "adjustmentCost": 12.3
             },
             {
                 "adjustmentGroup": "Окна",
-                "adjustmentElement": "Окна деревянные простые",
+                "adjustmentElement": ["Окна деревянные простые", "дерев.прост."],
                 "adjustmentCost": -6.2
             },
             {
                 "adjustmentGroup": "Отопление",
-                "adjustmentElement": "Отопление от котла отопительного",
+                "adjustmentElement": ["Отопление от котла отопительного", "котел"],
                 "adjustmentCost": -0.4
             }
         ],
@@ -3617,6 +3627,11 @@
         "type": "48",
         "name": "Бани в подвалах (подвальных или цокольных помещениях)",
         "description": "Стены каменные или бетонные. Перекрытие железобетонное. Перегородки каменные. Полы цементные, дощатые. Окна: стеклопакеты. Двери филенчатые. Отопление печное. Помещение с водопроводом и канализацией. Помещение электрифицировано. Внутренняя отделка: обшивка стен и потолков досками обшивки, окраска.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "камен./бетон.",
+            "roof": ""
+        },
         "basedCostsDependency": "Объем строения",
         "normAppliance": "на 1 куб.м типичного строения",
         "volumeBasedCosts": [
@@ -3634,17 +3649,17 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": -1.0
             },
             {
                 "adjustmentGroup": "Окна",
-                "adjustmentElement": "Окна деревянные простые",
+                "adjustmentElement": ["Окна деревянные простые", "дерев.прост."],
                 "adjustmentCost": -0.9
             },
             {
                 "adjustmentGroup": "Отопление",
-                "adjustmentElement": "Отопление от котла отопительного",
+                "adjustmentElement": ["Отопление от котла отопительного", "котел"],
                 "adjustmentCost": -0.4
             }
         ],
@@ -3654,6 +3669,11 @@
         "type": "49",
         "name": "Мансарды (надстройки) с каменными или деревянными рублеными стенами над банями, сараями, гаражами",
         "description": "Перекрытие деревянное. Перегородки деревянные. Полы дощатые, ламинированные. Окна деревянные простые. Двери филенчатые, щитовые, фанерованные, облицованные с двух сторон шпоном строганным. Без отопления, водопровода и канализации. Помещение электрифицировано. Внутренняя отделка: обшивка стен и потолков досками обшивки, окраска.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "кам./рубл.",
+            "roof": ""
+        },
         "basedCostsDependency": "Объем мансарды",
         "normAppliance": "на 1 куб.м мансарды",
         "volumeBasedCosts": [
@@ -3671,32 +3691,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Стены внутри",
-                "adjustmentElement": "Внутренняя штукатурка стен и потолков, оклейка обоями, окраска",
+                "adjustmentElement": ["Внутренняя штукатурка стен и потолков, оклейка обоями, окраска", "штукат., обои/окраска"],
                 "adjustmentCost": -2.5
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 0.8
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 0.4
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная обшивка стен защитным покрытием 'САЙДИНГ'",
+                "adjustmentElement": ["Наружная обшивка стен защитным покрытием 'САЙДИНГ'", "сайдинг"],
                 "adjustmentCost": 2.7
             },
             {
                 "adjustmentGroup": "Окна",
-                "adjustmentElement": "Окна: стеклопакеты",
+                "adjustmentElement": ["Окна: стеклопакеты", "стеклопакеты"],
                 "adjustmentCost": 9.3
             },
             {
                 "adjustmentGroup": "Отопление",
-                "adjustmentElement": "Отопление печное",
+                "adjustmentElement": ["Отопление печное", "печное"],
                 "adjustmentCost": 5.5
             }
         ],
@@ -3706,6 +3726,11 @@
         "type": "50",
         "name": "Мансарды (надстройки) с каркасно-засыпными или дощатыми стенами над банями, сараями, гаражами",
         "description": "Перекрытие деревянное. Стены каркасной или щитовой конструкции с обшивкой досками строганными. Перегородки деревянные. Полы дощатые, ламинированные. Окна деревянные простые. Двери филенчатые, щитовые, фанерованные, облицованные с двух сторон шпоном строганным. Без отопления, водопровода и канализации. Помещение электрифицировано. Внутренняя отделка: обшивка стен и потолков досками обшивки, окраска.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "каркасно-засыпные/дощатые",
+            "roof": ""
+        },
         "basedCostsDependency": "Объем мансарды",
         "normAppliance": "на 1 куб.м мансарды",
         "volumeBasedCosts": [
@@ -3723,27 +3748,27 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Стены внутри",
-                "adjustmentElement": "Внутренняя штукатурка стен и потолков, оклейка обоями, окраска",
+                "adjustmentElement": ["Внутренняя штукатурка стен и потолков, оклейка обоями, окраска", "штукат., обои/окраска"],
                 "adjustmentCost": -2.5
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 0.4
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная обшивка стен защитным покрытием 'САЙДИНГ'",
+                "adjustmentElement": ["Наружная обшивка стен защитным покрытием 'САЙДИНГ'", "сайдинг"],
                 "adjustmentCost": 2.7
             },
             {
                 "adjustmentGroup": "Окна",
-                "adjustmentElement": "Окна: стеклопакеты",
+                "adjustmentElement": ["Окна: стеклопакеты", "стеклопакеты"],
                 "adjustmentCost": 9.3
             },
             {
                 "adjustmentGroup": "Отопление",
-                "adjustmentElement": "Отопление печное",
+                "adjustmentElement": ["Отопление печное", "печное"],
                 "adjustmentCost": 5.5
             }
         ],
@@ -3753,6 +3778,11 @@
         "type": "51",
         "name": "Бассейны в помещениях (резервуары для воды)",
         "description": "Стены и полы железобетонные, бетонные. Резервуар с водопроводом и канализацией. Отделка бассейна плиткой.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "железобетон./бетон.",
+            "roof": ""
+        },
         "basedCostsDependency": "Объем строения, куб.м.",
         "normAppliance": "на 1 куб.м типичного строения",
         "volumeBasedCosts": [
@@ -3774,6 +3804,11 @@
         "type": "52",
         "name": "Сараи четырехстенные со стенами каменной кладки толщиной 25 см и более",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -3796,37 +3831,37 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -20.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -3836,6 +3871,11 @@
         "type": "53",
         "name": "Сараи четырехстенные со стенами каменной кладки толщиной до 25 см",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -3858,37 +3898,37 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -16.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -3898,6 +3938,11 @@
         "type": "54",
         "name": "Сараи четырехстенные с глинобитными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "глинобитные",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -3920,27 +3965,27 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -13.8
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -3950,6 +3995,11 @@
         "type": "55",
         "name": "Сараи четырехстенные с деревянными рублеными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "дерев.рубл.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -3972,51 +4022,56 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -24.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 7.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом керамическим",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом керамическим", "керам.кирпич"],
                 "adjustmentCost": 12.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом силикатным",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом силикатным", "силик.кирпич"],
                 "adjustmentCost": 7.5
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
-        ], 
+        ],
         "notes": []
     },
     {
         "type": "56",
         "name": "Сараи четырехстенные со стенами дощатыми, металлическими или из асбестоцементных листов",
         "description": "Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дощ./металл./асбестоцем.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4034,32 +4089,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Стены",
-                "adjustmentElement": "Стены каркасно-засыпные",
+                "adjustmentElement": ["Стены каркасно-засыпные", "каркасно-засыпные"],
                 "adjustmentCost": 8.0
             },
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -14.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -4069,6 +4124,11 @@
         "type": "57",
         "name": "Сараи трехстенные со стенами каменной кладки толщиной 25 см и более",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4096,37 +4156,37 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -28.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -4136,6 +4196,11 @@
         "type": "58",
         "name": "Сараи трехстенные со стенами каменной кладки толщиной до 25 см",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4163,37 +4228,37 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -14.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -4203,6 +4268,11 @@
         "type": "59",
         "name": "Сараи трехстенные с глинобитными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "глинобитные",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4230,22 +4300,22 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -14.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -4255,6 +4325,11 @@
         "type": "60",
         "name": "Сараи трехстенные с деревянными рублеными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "дерев.рубл.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4282,47 +4357,47 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Фундамент",
-                "adjustmentElement": "Фундаменты - деревянные стулья",
+                "adjustmentElement": ["Фундаменты - деревянные стулья", "дерев.стулья"],
                 "adjustmentCost": -6.0
             },
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -34.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 7.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом керамическим",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом керамическим", "керам.кирпич"],
                 "adjustmentCost": 12.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом силикатным",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом силикатным", "силик.кирпич"],
                 "adjustmentCost": 7.5
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -4332,6 +4407,11 @@
         "type": "61",
         "name": "Сараи трехстенные со стенами дощатыми или из асбестоцементных листов",
         "description": "Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дощ./асбестоцем.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4349,32 +4429,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "При высоте строения",
-                "adjustmentElement": "При высоте строения менее 1,5 м",
+                "adjustmentElement": ["При высоте строения менее 1,5 м", "менее 1,5 м"],
                 "adjustmentCost": -14.0
             },
             {
                 "adjustmentGroup": "Стены",
-                "adjustmentElement": "Стены каркасно-засыпные",
+                "adjustmentElement": ["Стены каркасно-засыпные", "каркасно-засыпные"],
                 "adjustmentCost": 6.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы дощатые",
+                "adjustmentElement": ["Полы дощатые", "дощатые"],
                 "adjustmentCost": 6.6
             }
         ],
@@ -4384,6 +4464,11 @@
         "type": "62",
         "name": "Теплицы рассадные почвенные",
         "description": "Теплица наземная, остекленная с металлическим, металлодеревянным или деревянным каркасом шатра, с электрическим обогревом рассады, с водяным отоплением шатра и почвы.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "металл./металлодерев./дерев.",
+            "roof": ""
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4400,6 +4485,11 @@
         "type": "63",
         "name": "Теплицы рассадные стеллажные",
         "description": "Теплица полузаглубленная остекленная с металлическим, металлодеревянным или деревянным каркасом шатра, с электросветовым облучением рассады, с отоплением шатра.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "металл./металлодерев./дерев.",
+            "roof": ""
+        },
         "basedCostsDependency": "Тип отопления шатра",
         "normAppliance": "на 1 кв.м строения",
         "volumeBasedCosts": [
@@ -4421,6 +4511,11 @@
         "type": "64",
         "name": "Теплицы овощные почвенные",
         "description": "Теплица наземная, с металлическим, металлодеревянным или деревянным каркасом шатра, остекленная или с пленочным покрытием, без отопления.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "металл./металлодерев./дерев.",
+            "roof": "остекл./пленочн."
+        },
         "basedCostsDependency": "Тип каркаса и покрытия",
         "normAppliance": "на 1 кв.м строения",
         "volumeBasedCosts": [
@@ -4439,12 +4534,11 @@
                 "volumeTo": "Деревянный / Пленочная",
                 "cost": 10
             }
-
         ],
         "adjustments": [
             {
                 "adjustmentGroup": "Отопление",
-                "adjustmentElement": "Водяное отопление шатра",
+                "adjustmentElement": ["Водяное отопление шатра", "водяное"],
                 "adjustmentCost": 3.6
             }
         ],
@@ -4454,6 +4548,11 @@
         "type": "65",
         "name": "Гаражи четырехстенные со стенами каменной кладки толщиной 25 см и более",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4471,32 +4570,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля (покрытие) совмещенная",
+                "adjustmentElement": ["Кровля (покрытие) совмещенная", "совмещенная"],
                 "adjustmentCost": -1.6
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             }
         ],
@@ -4506,6 +4605,11 @@
         "type": "66",
         "name": "Гаражи четырехстенные со стенами каменной кладки толщиной до 25 см",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4523,32 +4627,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля (покрытие) совмещенная",
+                "adjustmentElement": ["Кровля (покрытие) совмещенная", "совмещенная"],
                 "adjustmentCost": -1.6
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             }
         ],
@@ -4558,6 +4662,11 @@
         "type": "67",
         "name": "Гаражи четырехстенные с глинобитными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "глинобитные",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4575,17 +4684,17 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             }
         ],
@@ -4595,6 +4704,11 @@
         "type": "68",
         "name": "Гаражи четырехстенные с деревянными рублеными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "дерев.рубл.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4612,37 +4726,37 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Фундамент",
-                "adjustmentElement": "Фундаменты - стулья деревянные",
+                "adjustmentElement": ["Фундаменты - стулья деревянные", "дерев.стулья"],
                 "adjustmentCost": -8.0
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 7.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом керамическим",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом керамическим", "керам.кирпич"],
                 "adjustmentCost": 12.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом силикатным",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом силикатным", "силик.кирпич"],
                 "adjustmentCost": 7.5
             }
         ],
@@ -4652,6 +4766,11 @@
         "type": "69",
         "name": "Гаражи четырехстенные с дощатыми стенами",
         "description": "Кровля из асбестоцементных волнистых листов. Без перекрытия и полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дощатые",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4669,22 +4788,22 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Стены",
-                "adjustmentElement": "Стены каркасно-засыпные",
+                "adjustmentElement": ["Стены каркасно-засыпные", "каркасно-засыпные"],
                 "adjustmentCost": 8.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Полы",
-                "adjustmentElement": "Полы цементные, бетонные",
+                "adjustmentElement": ["Полы цементные, бетонные", "цем./бетон."],
                 "adjustmentCost": 1.9
             }
         ],
@@ -4694,6 +4813,11 @@
         "type": "70",
         "name": "Гаражи четырехстенные металлические",
         "description": "Стены, крыша и ворота из тонколистовой стали. Полы цементные, бетонные.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "металл.",
+            "roof": "металл."
+        },
         "basedCostsDependency": "Длина строения, м",
         "normAppliance": "на одно строение",
         "volumeBasedCosts": [
@@ -4720,6 +4844,11 @@
         "type": "71",
         "name": "Гаражи трехстенные со стенами каменной кладки толщиной 25 см и более",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные. Строение электрифицировано. Внутренняя отделка: стены оштукатурены, окрашены.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4737,32 +4866,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля (покрытие) совмещенная",
+                "adjustmentElement": ["Кровля (покрытие) совмещенная", "совмещенная"],
                 "adjustmentCost": -1.6
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             }
         ],
@@ -4772,6 +4901,11 @@
         "type": "72",
         "name": "Гаражи трехстенные со стенами каменной кладки толщиной до 25 см",
         "description": "Фундаменты каменные или бетонные. Стены сплошной кладки или облегченных конструкций из кирпича, керамических, бетонных и легкобетонных камней или блоков в любом сочетании. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные. Строение электрифицировано. Внутренняя отделка: стены оштукатурены, окрашены.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "камен.клад.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4789,32 +4923,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие железобетонное",
+                "adjustmentElement": ["Перекрытие железобетонное", "железобет."],
                 "adjustmentCost": 14.1
             },
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля (покрытие) совмещенная",
+                "adjustmentElement": ["Кровля (покрытие) совмещенная", "совмещенная"],
                 "adjustmentCost": -1.6
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Наружная штукатурка стен",
+                "adjustmentElement": ["Наружная штукатурка стен", "штукат."],
                 "adjustmentCost": 4.0
             }
         ],
@@ -4824,6 +4958,11 @@
         "type": "73",
         "name": "Гаражи трехстенные с деревянными рублеными стенами",
         "description": "Фундаменты каменные или бетонные. Кровля из асбестоцементных волнистых листов. Без перекрытия. Полы цементные, бетонные. Строение электрифицировано. Внутренняя отделка: обшивка стен досками обшивки, окраска.",
+        "estimationSheetData": {
+            "foundation": "камен./бетон.",
+            "walls": "дерев.рубл.",
+            "roof": "асбестоцем."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4841,32 +4980,32 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": 10.6
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из металлочерепицы",
+                "adjustmentElement": ["Кровля из металлочерепицы", "металлочер."],
                 "adjustmentCost": 24.0
             },
             {
                 "adjustmentGroup": "Кровля",
-                "adjustmentElement": "Кровля из оцинкованной стали или рулонных материалов",
+                "adjustmentElement": ["Кровля из оцинкованной стали или рулонных материалов", "оцинк./рулон."],
                 "adjustmentCost": 1.9
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Обшивка наружных стен досками обшивки",
+                "adjustmentElement": ["Обшивка наружных стен досками обшивки", "доски"],
                 "adjustmentCost": 7.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом керамическим",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом керамическим", "керам.кирпич"],
                 "adjustmentCost": 12.1
             },
             {
                 "adjustmentGroup": "Стены снаружи",
-                "adjustmentElement": "Облицовка деревянных стен кирпичом силикатным",
+                "adjustmentElement": ["Облицовка деревянных стен кирпичом силикатным", "силик.кирпич"],
                 "adjustmentCost": 7.5
             }
         ],
@@ -4876,6 +5015,11 @@
         "type": "74",
         "name": "Гаражи в подвалах (подвальных или цокольных помещениях)",
         "description": "Стены каменные или бетонные. Перекрытие железобетонное. Полы цементные, бетонные. Окна деревянные (стеклопакеты). Помещение электрифицировано. Внутренняя отделка: стены и потолки оштукатурены, окрашены.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "камен./бетон.",
+            "roof": "железобетон."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м типичного строения",
         "volumeBasedCosts": [
@@ -4893,12 +5037,12 @@
         "adjustments": [
             {
                 "adjustmentGroup": "Перекрытие",
-                "adjustmentElement": "Перекрытие деревянное",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
                 "adjustmentCost": -3.5
             },
             {
                 "adjustmentGroup": "Окна",
-                "adjustmentElement": "Окна деревянные простые",
+                "adjustmentElement": ["Окна деревянные простые", "дерев.прост."],
                 "adjustmentCost": -2.8
             }
         ],
@@ -4908,6 +5052,11 @@
         "type": "75",
         "name": "Террасы открытые, теневые навесы, беседки",
         "description": "Столбы - стойки деревянные. Кровля из асбестоцементных волнистых листов или кровельных рулонных материалов. Полы с любым видом покрытия. Перила по периметру строения.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.стойки",
+            "roof": "асбестоцем./рулон."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м строения",
         "volumeBasedCosts": [
@@ -4924,6 +5073,11 @@
         "type": "76",
         "name": "Навесы, открытые со всех сторон",
         "description": "Столбы - стойки деревянные. Кровля из асбестоцементных волнистых листов или кровельных рулонных материалов. Без полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.стойки",
+            "roof": "асбестоцем./рулон."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м строения",
         "volumeBasedCosts": [
@@ -4940,6 +5094,11 @@
         "type": "77",
         "name": "Навесы, открытые с одной стороны",
         "description": "Столбы - стойки деревянные. Кровля из асбестоцементных волнистых листов или кровельных рулонных материалов. Без полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.стойки",
+            "roof": "асбестоцем./рулон."
+        },
         "basedCostsDependency": "Площадь строения, кв.м.",
         "normAppliance": "на 1 кв.м строения",
         "volumeBasedCosts": [
@@ -4956,6 +5115,11 @@
         "type": "78",
         "name": "Погреба надворные (надземная часть)",
         "description": "Погребня: деревянная рубленная, каменная.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.рубл./кам.",
+            "roof": ""
+        },
         "basedCostsDependency": "Тип погребни",
         "normAppliance": "на одно строение",
         "volumeBasedCosts": [
@@ -4977,12 +5141,17 @@
         "type": "79",
         "name": "Колодцы питьевые (надземная часть)",
         "description": "Оголовки колодцев: из железобетонного кольца, деревянный рубленный.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "железобетон./дерев.рубл.",
+            "roof": ""
+        },
         "basedCostsDependency": "Тип оголовка",
         "normAppliance": "на одно сооружение",
         "volumeBasedCosts": [
             {
                 "volumeFrom": "Оголовок из железобетонного кольца",
-                "volumeTo": "Оголовок из железобентонного кольца",
+                "volumeTo": "Оголовок из железобетонного кольца",
                 "cost": 120
             },
             {
@@ -4995,218 +5164,152 @@
         "notes": []
     },
     {
-        "type": "80",
-        "name": "Уборные (надземная часть)",
-        "description": "Стены: дощатые, каменной кладки. Кровля из любых материалов.",
-        "basedCostsDependency": "Тип строения",
+        "type": "74",
+        "name": "Гаражи в подвалах (подвальных или цокольных помещениях)",
+        "description": "Стены каменные или бетонные. Перекрытие железобетонное. Полы цементные, бетонные. Окна деревянные (стеклопакеты). Помещение электрифицировано. Внутренняя отделка: стены и потолки оштукатурены, окрашены.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "камен./бетон.",
+            "roof": "железобетон."
+        },
+        "basedCostsDependency": "Площадь строения, кв.м.",
+        "normAppliance": "на 1 кв.м типичного строения",
+        "volumeBasedCosts": [
+            {
+                "volumeFrom": 0,
+                "volumeTo": 25,
+                "cost": 84
+            },
+            {
+                "volumeFrom": 25,
+                "volumeTo": 9999,
+                "cost": 70
+            }
+        ],
+        "adjustments": [
+            {
+                "adjustmentGroup": "Перекрытие",
+                "adjustmentElement": ["Перекрытие деревянное", "дерев."],
+                "adjustmentCost": -3.5
+            },
+            {
+                "adjustmentGroup": "Окна",
+                "adjustmentElement": ["Окна деревянные простые", "дерев.прост."],
+                "adjustmentCost": -2.8
+            }
+        ],
+        "notes": []
+    },
+    {
+        "type": "75",
+        "name": "Террасы открытые, теневые навесы, беседки",
+        "description": "Столбы - стойки деревянные. Кровля из асбестоцементных волнистых листов или кровельных рулонных материалов. Полы с любым видом покрытия. Перила по периметру строения.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.стойки",
+            "roof": "асбестоцем./рулон."
+        },
+        "basedCostsDependency": "Площадь строения, кв.м.",
+        "normAppliance": "на 1 кв.м строения",
+        "volumeBasedCosts": [
+            {
+                "volumeFrom": 0,
+                "volumeTo": 9999,
+                "cost": 50
+            }
+        ],
+        "adjustments": [],
+        "notes": []
+    },
+    {
+        "type": "76",
+        "name": "Навесы, открытые со всех сторон",
+        "description": "Столбы - стойки деревянные. Кровля из асбестоцементных волнистых листов или кровельных рулонных материалов. Без полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.стойки",
+            "roof": "асбестоцем./рулон."
+        },
+        "basedCostsDependency": "Площадь строения, кв.м.",
+        "normAppliance": "на 1 кв.м строения",
+        "volumeBasedCosts": [
+            {
+                "volumeFrom": 0,
+                "volumeTo": 9999,
+                "cost": 26
+            }
+        ],
+        "adjustments": [],
+        "notes": []
+    },
+    {
+        "type": "77",
+        "name": "Навесы, открытые с одной стороны",
+        "description": "Столбы - стойки деревянные. Кровля из асбестоцементных волнистых листов или кровельных рулонных материалов. Без полов.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.стойки",
+            "roof": "асбестоцем./рулон."
+        },
+        "basedCostsDependency": "Площадь строения, кв.м.",
+        "normAppliance": "на 1 кв.м строения",
+        "volumeBasedCosts": [
+            {
+                "volumeFrom": 0,
+                "volumeTo": 9999,
+                "cost": 32
+            }
+        ],
+        "adjustments": [],
+        "notes": []
+    },
+    {
+        "type": "78",
+        "name": "Погреба надворные (надземная часть)",
+        "description": "Погребня: деревянная рубленная, каменная.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "дерев.рубл./кам.",
+            "roof": ""
+        },
+        "basedCostsDependency": "Тип погребни",
         "normAppliance": "на одно строение",
         "volumeBasedCosts": [
             {
-                "volumeFrom": "Одноместные со стенами дощатыми",
-                "volumeTo": "Одноместные со стенами дощатыми",
-                "cost": 210
+                "volumeFrom": "Погребня деревянная рубленная",
+                "volumeTo": "Погребня деревянная рубленная",
+                "cost": 580
             },
             {
-                "volumeFrom": "Одноместные со стенами каменной кладки",
-                "volumeTo": "Одноместные со стенами каменной кладки",
-                "cost": 280
-            },
-            {
-                "volumeFrom": "Двухместные со стенами дощатыми",
-                "volumeTo": "Двухместные со стенами дощатыми",
-                "cost": 340
-            },
-            {
-                "volumeFrom": "Двухместные со стенами каменной кладки",
-                "volumeTo": "Двухместные со стенами каменной кладки",
-                "cost": 460
+                "volumeFrom": "Погребня каменная",
+                "volumeTo": "Погребня каменная",
+                "cost": 500
             }
         ],
         "adjustments": [],
         "notes": []
     },
     {
-        "type": "81",
-        "name": "Заборы кирпичные",
-        "description": "Столбы заборов: кирпичные, без столбов. Фундамент или цоколь: каменный, бетонный. Заполнения заборов сплошные из кирпича.",
-        "basedCostsDependency": "Площадь забора, кв.м.",
-        "normAppliance": "на 1 кв.м забора",
+        "type": "79",
+        "name": "Колодцы питьевые (надземная часть)",
+        "description": "Оголовки колодцев: из железобетонного кольца, деревянный рубленный.",
+        "estimationSheetData": {
+            "foundation": "",
+            "walls": "железобетон./дерев.рубл.",
+            "roof": ""
+        },
+        "basedCostsDependency": "Тип оголовка",
+        "normAppliance": "на одно сооружение",
         "volumeBasedCosts": [
             {
-                "volumeFrom": "заборы кирпичные",
-                "volumeTo": "заборы кирпичные",
-                "cost": 21
-            }
-        ],
-        "adjustments": [],
-        "notes": []
-    },
-    {
-        "type": "82",
-        "name": "Заборы металлические",
-        "description": "Столбы заборов: кирпичные, металлические. Фундамент или цоколь: каменный, бетонный. Заполнения заборов из кованной металлической арматурной сетки.",
-        "basedCostsDependency": "Тип столбов",
-        "normAppliance": "на 1 кв.м забора",
-        "volumeBasedCosts": [
-            {
-                "volumeFrom": "Столбы забора кирпичные",
-                "volumeTo": "Столбы забора кирпичные",
-                "cost": 20
+                "volumeFrom": "Оголовок из железобетонного кольца",
+                "volumeTo": "Оголовок из железобетонного кольца",
+                "cost": 120
             },
             {
-                "volumeFrom": "Столбы забора металлические",
-                "volumeTo": "Столбы забора металлические",
-                "cost": 17
-            }
-        ],
-        "adjustments": [],
-        "notes": []
-    },
-    {
-        "type": "83",
-        "name": "Заборы железобетонные",
-        "description": "Столбы заборов: железобетонные, без столбов. Заполнения заборов: из решетчатых железобетонных плит.",
-        "basedCostsDependency": "Площадь забора, кв.м.",
-        "normAppliance": "на 1 кв.м забора",
-        "volumeBasedCosts": [
-            {
-                "volumeFrom": "Заборы железобетонные",
-                "volumeTo": "Заборы железобетонные",
-                "cost": 15
-            }
-        ],
-        "adjustments": [],
-        "notes": []
-    },
-    {
-        "type": "84",
-        "name": "Заборы деревянные решетчатые (штакетные)",
-        "description": "Столбы заборов: кирпичные, железобетонные, деревянные. Без цоколя, с кирпичным цоколем, с железобетонной цокольной плитой. Заполнения заборов решетчатые из досок или штакетника.",
-        "basedCostsDependency": "Тип столбов, наполнения",
-        "normAppliance": "на 1 кв.м забора",
-        "volumeBasedCosts": [
-            {
-                "volumeFrom": "Нестроганый на железобетонных столбах",
-                "volumeTo": "Нестроганый на железобетонных столбах",
-                "cost": 7
-            },
-            {
-                "volumeFrom": "Нестроганый на деревянных столбах",
-                "volumeTo": "Нестроганый на деревянных столбах",
-                "cost": 6
-            },
-            {
-                "volumeFrom": "Строганый на железобетонных столбах",
-                "volumeTo": "Строганый на железобетонных столбах",
-                "cost": 10
-            },
-            {
-                "volumeFrom": "Строганый на деревянных столбах",
-                "volumeTo": "Строганый на деревянных столбах",
-                "cost": 9
-            },
-            {
-                "volumeFrom": "Строганый на кирпичных столбах с кирпичным цоколем",
-                "volumeTo": "Строганый на кирпичных столбах с кирпичным цоколем",
-                "cost": 16
-            },
-            {
-                "volumeFrom": "Строганый на железобетонных столбах с железобетонной цокольной плитой",
-                "volumeTo": "Строганый на железобетонных столбах с железобетонной цокольной плитой",
-                "cost": 11
-            }
-        ],
-        "adjustments": [],
-        "notes": []
-    },
-    {
-        "type": "85",
-        "name": "Заборы деревянные сплошные",
-        "description": "Столбы заборов: кирпичные, железобетонные, деревянные. Без цоколя, с кирпичным цоколем, с железобетонной цокольной плитой. Заполнения заборов сплошные из досок.",
-        "basedCostsDependency": "Тип столбов и наполнения",
-        "normAppliance": "на 1 кв.м забора",
-        "volumeBasedCosts": [
-            {
-                "volumeFrom": "Нестроганый на железобетонных столбах",
-                "volumeTo": "Нестроганый на железобетонных столбах",
-                "cost": 9
-            },
-            {
-                "volumeFrom": "Нестроганый на деревянных столбах",
-                "volumeTo": "Нестроганый на деревянных столбах",
-                "cost": 7
-            },
-            {
-                "volumeFrom": "Строганый на железобетонных столбах",
-                "volumeTo": "Строганый на железобетонных столбах",
-                "cost": 11
-            },
-            {
-                "volumeFrom": "Строганый на деревянных столбах",
-                "volumeTo": "Строганый на деревянных столбах",
-                "cost": 10
-            },
-            {
-                "volumeFrom": "Строганый на кирпичных столбах с кирпичным цоколем",
-                "volumeTo": "Строганый на кирпичных столбах с кирпичным цоколем",
-                "cost": 17
-            },
-            {
-                "volumeFrom": "Строганый на железобетонных столбах с железобетонной цокольной плитой",
-                "volumeTo": "Строганый на железобетонных столбах с железобетонной цокольной плитой",
-                "cost": 12
-            }
-        ],
-        "adjustments": [],
-        "notes": []
-    },
-    {
-        "type": "86",
-        "name": "Заборы из металлической сетки",
-        "description": "Столбы заборов: кирпичные, железобетонные, деревянные. Заполнения заборов из металлической сетки.",
-        "basedCostsDependency": "Тип столбов",
-        "normAppliance": "на 1 кв.м забора",
-        "volumeBasedCosts": [
-            {
-                "volumeFrom": "Столбы железобетонные",
-                "volumeTo": "Столбы железобетонные",
-                "cost": 6
-            },
-            {
-                "volumeFrom": "Столбы деревянные",
-                "volumeTo": "Столбы деревянные",
-                "cost": 5
-            }
-        ],
-        "adjustments": [],
-        "notes": []
-    },
-    {
-        "type": "87",
-        "name": "Ворота и калитки",
-        "description": "Ворота: деревянные, металлические. Калитки: деревянные, металлические.",
-        "basedCostsDependency": "Тип конструкции",
-        "normAppliance": "на одно строение",
-        "volumeBasedCosts": [
-            {
-                "volumeFrom": "Ворота деревянные",
-                "volumeTo": "Ворота деревянные",
-                "cost": 160
-            },
-            {
-                "volumeFrom": "Ворота металлические",
-                "volumeTo": "Ворота металлические",
-                "cost": 280
-            },
-            {
-                "volumeFrom": "Калитки деревянные",
-                "volumeTo": "Калитки деревянные",
-                "cost": 40
-            },
-            {
-                "volumeFrom": "Калитки металлические",
-                "volumeTo": "Калитки металлические",
-                "cost": 80
+                "volumeFrom": "Оголовок деревянный рубленный",
+                "volumeTo": "Оголовок деревянный рубленный",
+                "cost": 220
             }
         ],
         "adjustments": [],
