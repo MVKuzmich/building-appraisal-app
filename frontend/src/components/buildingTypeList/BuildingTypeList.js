@@ -50,12 +50,12 @@ const BuildingTypeList = ({ buildingTypes, onSelectBuildingType, onAddToEstimati
           </ListItem>
         ))}
       </List>
-      <BuildingTypeModal
+      {selectedBuildingType && <BuildingTypeModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         buildingType={selectedBuildingType}
         onAddToEstimation={onAddToEstimation}
-      />
+      />}
     </Paper>
   );
 };

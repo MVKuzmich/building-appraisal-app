@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -15,146 +15,455 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Box
+  Box,
+  Tabs,
+  Tab,
+  Grid
 } from '@mui/material';
 
 const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) => {
-  const [selectedBasedCost, setSelectedBasedCost] = useState(null);
+  const [selectedBasedCost, setSelectedBasedCost] = useState(0);
   const [selectedAdjustments, setSelectedAdjustments] = useState([]);
-  const [ownerName, setOwnerName] = useState('');
-  const [address, setAddress] = useState('');
-  const [wearAmount, setWearAmount] = useState(0);
+  const [wearRate, setWearRate] = useState(0);
   const [buildingYear, setBuildingYear] = useState(0);
+  const [buildingDimensions, setBuildingDimensions] = useState({
+    length: 0,
+    width: 0,
+    height: 0,
+    cubic: 0,
+    area: 0
+  });
+  const [commonAdjustments, setCommonAdjustments] = useState([]);
+  const [adjustmentQuantities, setAdjustmentQuantities] = useState({});
+  const [totalCommonAdjustments, setTotalCommonAdjustments] = useState(0);
+
+  const [activeTab, setActiveTab] = useState(0);
+
+  const inputRefs = useRef({});
+
+  const commonAdjustmentsData = [
+    { element: 'Устройство теплых полов с теплоизоляцией', cost: 28.4, unit: '1 кв.м пола' },
+    { element: 'Устройство роллет оконных (дверных)', cost: 134.5, unit: '1 кв.м окна' },
+    { element: 'Утепление стен или цоколя', cost: 9.0, unit: '1 кв.м стен' },
+    { element: 'Утепление кровли', cost: 9.8, unit: '1 кв.м кровли' },
+    { element: 'Отопление печное (один источник отопления)', cost: 594.0, unit: 'печь или очаг' },
+    { element: 'Строение оборудовано камином', cost: 378.0, unit: 'камин' },
+    { element: 'Отопление водяное от котла отопительного водогрейного', cost: 4.5, unit: '1 куб.м. строения' },
+    { element: 'Водоснабжение и канализация', cost: 1.4, unit: '1 куб.м. строения' },
+    { element: 'Строение оборудовано электрической плитой', cost: 410.0, unit: 'комплект' },
+    { element: 'Строение оборудовано газовой плитой', cost: 313.0, unit: 'комплект' },
+    { element: 'Строение оборудовано газовой плитой с газовым баллоном', cost: 357.0, unit: 'комплект' },
+    { element: 'Строение оборудовано водонагревательным устройством', cost: 177.0, unit: 'комплект' },
+  ];
+
+  useEffect(() => {
+    if (open) {
+      const firstInput = Object.values(inputRefs.current)[0];
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }
+  }, [open]);
 
   useEffect(() => {
     if (open) {
       resetForm();
     }
   }, [open, buildingType]);
+  
+  
+  const getBasedCostWithAdjustments = useCallback(() => {
+    console.log(`cost with adjustment`);
+    if(selectedBasedCost) {
+      let result = parseInt(selectedBasedCost);
+      if(selectedAdjustments.length > 0) {
+        const sum = selectedAdjustments.map(adj => adj.adjustmentCost).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        result += sum;
+      }
+      return result;
+    }
+    return 0;
+  }, [selectedBasedCost, selectedAdjustments]);
+  
+  const basedCostWithAdjustments = useMemo(() => getBasedCostWithAdjustments(), [getBasedCostWithAdjustments]);
+    
+  const getTotalBasedCost = useCallback((normAppliance) => {
+    const {cubic, area} = buildingDimensions;
+    console.log(`count total based cost`);
+    let totalBasedCost;
+    switch (normAppliance) {
+      case 'на 1 куб.м.':
+        totalBasedCost = basedCostWithAdjustments * cubic;
+        break;
+      case 'на 1 кв.м.':
+        totalBasedCost = basedCostWithAdjustments * area;
+        break;
+      default:
+        totalBasedCost = basedCostWithAdjustments;
+    }
+    return totalBasedCost;
+  }, [buildingDimensions, basedCostWithAdjustments]);
 
-  const resetForm = () => {
-    setSelectedBasedCost(null);
+  const buildingAppraisal = useMemo(() => {
+    return getTotalBasedCost(buildingType.normAppliance) + parseFloat(totalCommonAdjustments);
+  }, [getTotalBasedCost, buildingType.normAppliance, totalCommonAdjustments]);
+
+  const buildingAppraisalWithWear = useMemo(() => {
+    return (buildingAppraisal * (1 - wearRate / 100)).toFixed(0);
+  }, [buildingAppraisal, wearRate]);
+  
+  
+
+  const resetForm = useCallback(() => {
+    setSelectedBasedCost(0);
     setSelectedAdjustments([]);
-    setOwnerName('');
-    setAddress('');
-    setWearAmount(0);
+    setWearRate(0);
     setBuildingYear(0);
-  };
-
-  if (!buildingType) return null;
-
-  const handleClose = () => {
-    resetForm();
-    onClose();
-  };
-
-  const handleAddToEstimation = () => {
-    onAddToEstimation({
-      buildingType,
-      selectedBasedCost,
-      selectedAdjustments,
-      ownerName,
-      address,
-      wearAmount,
-      buildingYear
+    setBuildingDimensions({
+      length: 0,
+      width: 0,
+      height: 0,
+      cubic: 0,
+      area: 0
     });
-    handleClose();
-  };
+    setCommonAdjustments([]);
+    setAdjustmentQuantities({});
+    setTotalCommonAdjustments(0);
+  }, []);
 
-  const renderBaseCosts = () => {
-    if (buildingType.volumeBasedCosts && buildingType.volumeBasedCosts.length > 0) {
+  const handleClose = useCallback((event, reason) => {
+    if (reason !== 'backdropClick') {
+      onClose();
+      resetForm();
+    }
+  }, [onClose, resetForm]);
+
+
+  const handleAddToEstimation = useCallback(() => {
+    const estimationData = {
+      buildingName: buildingType.estimationSheetData.name,
+      buildingYear,
+      dimensions: buildingDimensions,
+      selectedAdjustments,
+      commonAdjustments
+    };
+    onAddToEstimation(estimationData);
+    handleClose();
+  }, [buildingType.estimationSheetData.name, buildingYear, buildingDimensions, selectedAdjustments, commonAdjustments, onAddToEstimation, handleClose]);
+
+  const handleDimensionChange = useCallback((dimension, value) => {
+    const numValue = parseFloat(value) || 0;
+    setBuildingDimensions(prev => {
+      const newDimensions = { ...prev, [dimension]: numValue };
+      
+      if (dimension === 'cubic' || dimension === 'area') {
+        newDimensions.length = 0;
+        newDimensions.width = 0;
+        newDimensions.height = 0;
+      } else {
+        newDimensions.cubic = newDimensions.length * newDimensions.width * newDimensions.height;
+        newDimensions.area = newDimensions.length * newDimensions.width;
+      }
+      
+      return newDimensions;
+    });
+  }, []);
+  
+
+
+  const renderBaseCosts = useCallback(() => {
+    if (open) {
+      console.log(`render based costs ${buildingType.volumeBasedCosts}`);
       return (
         <FormControl component="fieldset" fullWidth margin="normal">
-          <FormLabel component="legend">Базовая стоимость</FormLabel>
+          <FormLabel component="legend">{`Базовая стоимость (${buildingType.basedCostsDependency})`}</FormLabel>
           <RadioGroup
             aria-label="base-cost"
             name="base-cost"
-            value={selectedBasedCost ? JSON.stringify(selectedBasedCost) : ''}
-            onChange={(e) => setSelectedBasedCost(JSON.parse(e.target.value))}
+            value={selectedBasedCost}
+            onChange={(e) => setSelectedBasedCost(e.target.value)}
           >
-            {buildingType.volumeBasedCosts.map((cost, index) => (
+            {buildingType.volumeBasedCosts.map((basedCost, index) => {
+              let label = (/^\d+$/.test(basedCost.volumeFrom))
+              ? `от ${basedCost.volumeFrom} до ${basedCost.volumeTo}: ${basedCost.cost} руб.`
+              : `${basedCost.volumeFrom}: ${basedCost.cost} руб.`;
+
+              return (
               <FormControlLabel
                 key={index}
-                value={JSON.stringify(cost)}
+                value={basedCost.cost}
                 control={<Radio />}
-                label={`${cost.volumeFrom}: ${cost.cost} руб.`}
+                label={label}
               />
-            ))}
+              )} 
+            )}
           </RadioGroup>
         </FormControl>
       );
     }
     return null;
-  };
+  }, [open, buildingType.basedCostsDependency, buildingType.volumeBasedCosts, selectedBasedCost]);
 
-  const renderAdjustments = () => {
-    if (buildingType.adjustments && buildingType.adjustments.length > 0) {
+  const renderAdjustments = useCallback(() => {
+    if(open) {
+      console.log(`render adjustments ${buildingType.adjustments}`)
       return (
         <FormControl fullWidth margin="normal">
           <InputLabel>Надбавки</InputLabel>
-          <Select
+          {(buildingType.adjustments && buildingType.adjustments.length > 0) ? (<Select
             multiple
             value={selectedAdjustments}
             onChange={(e) => setSelectedAdjustments(e.target.value)}
-            renderValue={(selected) => selected.map(adj => adj.adjustmentElement).join(', ')}
+            renderValue={(selected) => selected.map(adj => adj.adjustmentElement[0]).join(', ')}
           >
             {buildingType.adjustments.map((adjustment, index) => (
               <MenuItem key={index} value={adjustment}>
-                {adjustment.adjustmentElement}: {adjustment.adjustmentCost} руб.
+                {adjustment.adjustmentElement[0]}: {adjustment.adjustmentCost} руб.
               </MenuItem>
             ))}
           </Select>
+          ) : (
+          <Select>
+            <MenuItem>Надбавки и скидки не установлены</MenuItem>
+          </Select>
+        )}
         </FormControl>
       );
     }
-    return null;
-  };
+  }, [open, buildingType.adjustments, selectedAdjustments]);
+      
+  const handleInputChange = useCallback((e, adjustment) => {
+    const quantity = parseFloat(e.target.value) || 0;
+    setAdjustmentQuantities(prevQuantities => {
+      const updatedQuantities = {
+        ...prevQuantities,
+        [adjustment.element]: [quantity]
+      };
+
+      const total = commonAdjustmentsData.reduce((sum, adj) => {
+        const qty = updatedQuantities[adj.element] || 0;
+        return sum + qty * adj.cost;
+      }, 0).toFixed(2);
+
+      setTotalCommonAdjustments(total);
+      console.log(`сумма общих надбавок ${total}`);
+
+      return updatedQuantities;
+    });
+  }, [commonAdjustmentsData]);
+
+  const renderCommonAdjustments = useCallback(() => {
+    console.log(`render common adjustments ${commonAdjustments}`);
+    return (
+      <Box>
+        {commonAdjustmentsData.map((adjustment, index) => {
+        return (
+          <Box key={index} display="flex" alignItems="center" marginBottom={2}>
+            <Typography
+              variant="body2"
+              style={{
+                width: '550px',
+                whiteSpace: 'normal',
+                overflowWrap: 'break-word',
+              }}
+            >{`${adjustment.element} (${adjustment.unit}):`}
+            </Typography>
+            <TextField
+              type='number'
+              inputRef={el => inputRefs.current[adjustment.element] = el}
+              value={adjustmentQuantities[adjustment.element] || ''}
+              onChange={(e) => {
+                handleInputChange(e, adjustment);
+                }
+              }
+              style={{ marginLeft: '10px', width: '80px' }}
+            />
+            <TextField disabled
+              variant='filled'
+              type="text"
+              value= {adjustment.cost}
+              style={{ marginLeft: '10px', width: '80px' }}
+            />
+            <TextField
+              type="text"
+              value={
+                adjustmentQuantities[adjustment.element] !== undefined
+                  ? (adjustmentQuantities[adjustment.element] * adjustment.cost).toFixed(2)
+                  : '-'
+              }
+              style={{ marginLeft: '10px', width: '80px' }}
+            />
+          </Box>
+        )}
+        )}
+      </Box>
+    );
+  }, [adjustmentQuantities, handleInputChange]);
+
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>{buildingType.type}. {buildingType.name}</DialogTitle>
       <DialogContent>
-        <Typography variant="body1" paragraph>
-          <strong>Описание:</strong> {buildingType.description}
-        </Typography>
-        {renderBaseCosts()}
-        {renderAdjustments()}
-        <TextField
-          fullWidth
-          label="ФИО собственника"
-          value={ownerName}
-          onChange={(e) => setOwnerName(e.target.value)}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Адрес строения"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Год постройки"
-          value={buildingYear}
-          onChange={(e) => setBuildingYear(e.target.value)}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Сумма износа"
-          type="number"
-          value={wearAmount}
-          onChange={(e) => setWearAmount(parseFloat(e.target.value) || 0)}
-          margin="normal"
-        />
+        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+          <Tab label="Основная информация" />
+          <Tab label="Общие надбавки" />
+        </Tabs>
+        {activeTab === 0 && (
+          <Box>
+            <Typography variant="body1" paragraph>
+              <strong>Описание:</strong> {buildingType.description}
+            </Typography>
+            <Grid container spacing={2} direction="row">
+              <Grid item xs={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Год постройки"
+                      value={buildingYear}
+                      onChange={(e) => setBuildingYear(e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Процент износа"
+                      type="number"
+                      value={wearRate}
+                      onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
+                      margin="normal"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                  <TextField
+                      fullWidth
+                      label="Длина строения"
+                      type="number"
+                      value={buildingDimensions.length || ''}
+                      onChange={(e) => handleDimensionChange('length', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      label="Ширина строения"
+                      type="number"
+                      value={buildingDimensions.width || ''}
+                      onChange={(e) => handleDimensionChange('width', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      label="Высота строения"
+                      type="number"
+                      value={buildingDimensions.height || ''}
+                      onChange={(e) => handleDimensionChange('height', e.target.value)}
+                      margin="normal"
+                    />       
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                  <TextField
+                      fullWidth
+                      label="Объем строения"
+                      type="number"
+                      value={buildingDimensions.cubic || ''}
+                      onChange={(e) => handleDimensionChange('cubic', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Площадь строения"
+                      type="number"
+                      value={buildingDimensions.area || ''}
+                      onChange={(e) => handleDimensionChange('area', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            {renderBaseCosts()}
+            {renderAdjustments()}
+            <TextField
+              fullWidth
+              label="Сумма общих надбавок"
+              type="number"
+              value={totalCommonAdjustments}
+              InputProps={{
+                readOnly: true,
+              }}
+              margin="normal"
+            />
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  label="Норма с учетом отклонений"
+                  type="number"
+                  value={basedCostWithAdjustments}
+                  margin="normal"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  label="Оценка строения"
+                  value={buildingAppraisal}
+                  margin="normal"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  label="Оценка с учетом износа"
+                  type="number"
+                  value={buildingAppraisalWithWear}
+                  margin="normal"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+        {activeTab === 1 && (
+          <Box>
+            {renderCommonAdjustments()}
+            <Typography variant="body1" paragraph>
+              <strong>Сумма надбавок:</strong> {totalCommonAdjustments} руб.
+              <div> Примечание. Общие надбавки к оценочной стоимости строения рассчитаны с учетом
+                <p>по теплым полам: устройство теплоизоляции, прокладка электрических кабелей, устройство покрытий цементных (бетонных), установка терморегуляторов;
+                </p>
+                <p>по роллетам оконным (дверным): установка роллет алюминиевых и механических приводов.</p>
+              </div>
+            </Typography>
+          </Box>
+        )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
-        <Button onClick={handleAddToEstimation} color="primary">
-          ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ
-        </Button>
-      </DialogActions>
+      {activeTab === 0 && (
+        <DialogActions>
+          <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
+          <Button onClick={handleAddToEstimation} color="primary">
+            ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ
+          </Button>
+        </DialogActions>
+    )}
     </Dialog>
   );
 };

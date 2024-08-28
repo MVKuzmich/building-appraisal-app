@@ -12,12 +12,10 @@ function App() {
 
   const onSelectBuildingType = (buildingType) => {
     setSelectedBuildingType(buildingType);
-    console.log("Выбран тип строения:", buildingType);
   };
 
   const onAddToEstimation = (estimationData) => {
     setEstimationList([...estimationList, estimationData]);
-    console.log("Добавлено в оценочный лист:", estimationData);
   };
 
   return (
