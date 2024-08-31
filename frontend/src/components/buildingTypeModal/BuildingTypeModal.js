@@ -18,7 +18,8 @@ import {
   Box,
   Tabs,
   Tab,
-  Grid
+  Grid,
+  Checkbox
 } from '@mui/material';
 
 const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) => {
@@ -35,7 +36,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
   });
   const [commonAdjustments, setCommonAdjustments] = useState([]);
   const [adjustmentQuantities, setAdjustmentQuantities] = useState({});
-  const [totalCommonAdjustments, setTotalCommonAdjustments] = useState(0);
+  const [totalCommonAdjustments, setTotalCommonAdjustments] = useState({});
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -105,11 +106,11 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
   }, [buildingDimensions, basedCostWithAdjustments]);
 
   const buildingAppraisal = useMemo(() => {
-    return getTotalBasedCost(buildingType.normAppliance) + parseFloat(totalCommonAdjustments);
+    return getTotalBasedCost(buildingType.normAppliance) + parseFloat(totalCommonAdjustments?.totalValue || 0);
   }, [getTotalBasedCost, buildingType.normAppliance, totalCommonAdjustments]);
 
   const buildingAppraisalWithWear = useMemo(() => {
-    return (buildingAppraisal * (1 - wearRate / 100)).toFixed(0);
+    return parseFloat((buildingAppraisal * (1 - wearRate / 100)).toFixed(0));
   }, [buildingAppraisal, wearRate]);
   
   
@@ -139,17 +140,27 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
   }, [onClose, resetForm]);
 
 
+
   const handleAddToEstimation = useCallback(() => {
     const estimationData = {
       buildingName: buildingType.estimationSheetData.name,
       buildingYear,
+      buildingFoundation: buildingType.estimationSheetData.foundation,
+      buildingWalls: buildingType.estimationSheetData.walls,
+      buildingRoof: buildingType.estimationSheetData.roof,     
       dimensions: buildingDimensions,
+      type: buildingType.type,
+      selectedBasedCost,
       selectedAdjustments,
-      commonAdjustments
+      commonAdjustments,
+      basedCostWithAdjustments,
+      buildingAppraisal,
+      wearRate,
+      buildingAppraisalWithWear
     };
     onAddToEstimation(estimationData);
     handleClose();
-  }, [buildingType.estimationSheetData.name, buildingYear, buildingDimensions, selectedAdjustments, commonAdjustments, onAddToEstimation, handleClose]);
+  }, [buildingType.estimationSheetData.name, buildingType.estimationSheetData.foundation, buildingType.estimationSheetData.walls, buildingType.estimationSheetData.roof, buildingType.type, buildingYear, buildingDimensions, selectedBasedCost, selectedAdjustments, commonAdjustments, basedCostWithAdjustments, buildingAppraisal, buildingAppraisalWithWear, onAddToEstimation, handleClose]);
 
   const handleDimensionChange = useCallback((dimension, value) => {
     const numValue = parseFloat(value) || 0;
@@ -232,73 +243,103 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
     }
   }, [open, buildingType.adjustments, selectedAdjustments]);
       
+  const handleCheckboxChange = useCallback((checked, adjustment) => {
+    setAdjustmentQuantities(prev => {
+      const newQuantities = { ...prev };
+      if (checked) {
+        newQuantities[adjustment.element] = newQuantities[adjustment.element] || 0;
+      } else {
+        delete newQuantities[adjustment.element];
+      }
+      updateTotalCommonAdjustments(newQuantities);
+      return newQuantities;
+    });
+  }, []);
+  
   const handleInputChange = useCallback((e, adjustment) => {
     const quantity = parseFloat(e.target.value) || 0;
     setAdjustmentQuantities(prevQuantities => {
       const updatedQuantities = {
         ...prevQuantities,
-        [adjustment.element]: [quantity]
+        [adjustment.element]: quantity
       };
-
+  
       const total = commonAdjustmentsData.reduce((sum, adj) => {
         const qty = updatedQuantities[adj.element] || 0;
         return sum + qty * adj.cost;
       }, 0).toFixed(2);
-
-      setTotalCommonAdjustments(total);
-      console.log(`сумма общих надбавок ${total}`);
-
+  
+      const commonAdjustmentsList = Object.entries(updatedQuantities)
+        .filter(([key, value]) => value > 0)
+        .map(([key, value]) => ({ element: key, quantity: value }));
+  
+      setTotalCommonAdjustments({
+        totalValue: parseFloat(total),
+        commonAdjustmentsList
+      });
+  
+      console.log(`Сумма общих надбавок: ${total}`);
       return updatedQuantities;
     });
   }, [commonAdjustmentsData]);
+  
+  const updateTotalCommonAdjustments = (quantities) => {
+    const total = commonAdjustmentsData.reduce((sum, adj) => {
+      const qty = quantities[adj.element] || 0;
+      return sum + qty * adj.cost;
+    }, 0).toFixed(2);
+    const adjObj = Object.entries(quantities)
+        .filter(([key, value]) => value > 0)
+        .map(([key, value]) => ({ element: key, quantity: value }));
+  
+    setTotalCommonAdjustments({
+      totalValue: parseFloat(total),
+      commonAdjustmentsList: adjObj
+  });
+}
 
   const renderCommonAdjustments = useCallback(() => {
-    console.log(`render common adjustments ${commonAdjustments}`);
     return (
-      <Box>
-        {commonAdjustmentsData.map((adjustment, index) => {
-        return (
-          <Box key={index} display="flex" alignItems="center" marginBottom={2}>
-            <Typography
-              variant="body2"
-              style={{
-                width: '550px',
-                whiteSpace: 'normal',
-                overflowWrap: 'break-word',
-              }}
-            >{`${adjustment.element} (${adjustment.unit}):`}
-            </Typography>
-            <TextField
-              type='number'
-              inputRef={el => inputRefs.current[adjustment.element] = el}
-              value={adjustmentQuantities[adjustment.element] || ''}
-              onChange={(e) => {
-                handleInputChange(e, adjustment);
-                }
+      <div>
+        {commonAdjustmentsData.map((adjustment) => (
+          <div key={adjustment.element} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={adjustmentQuantities.hasOwnProperty(adjustment.element)}
+                  onChange={(e) => handleCheckboxChange(e.target.checked, adjustment)}
+                />
               }
-              style={{ marginLeft: '10px', width: '80px' }}
+              label={`${adjustment.element} (${adjustment.unit})`}
             />
-            <TextField disabled
-              variant='filled'
-              type="text"
-              value= {adjustment.cost}
-              style={{ marginLeft: '10px', width: '80px' }}
-            />
-            <TextField
-              type="text"
-              value={
-                adjustmentQuantities[adjustment.element] !== undefined
-                  ? (adjustmentQuantities[adjustment.element] * adjustment.cost).toFixed(2)
-                  : '-'
-              }
-              style={{ marginLeft: '10px', width: '80px' }}
-            />
-          </Box>
-        )}
-        )}
-      </Box>
+            {adjustmentQuantities.hasOwnProperty(adjustment.element) && (
+              <>
+                <TextField
+                  type="number"
+                  value={adjustmentQuantities[adjustment.element] || ''}
+                  onChange={(e) => handleInputChange(e, adjustment)}
+                  style={{ marginLeft: '10px', width: '80px' }}
+                  placeholder="Количество"
+                />
+                <TextField
+                  disabled
+                  type="number"
+                  value={adjustment.cost}
+                  style={{ marginLeft: '10px', width: '80px' }}
+
+                />
+                <TextField
+                  type="number"
+                  value={(adjustmentQuantities[adjustment.element] * adjustment.cost).toFixed(2)}
+                  style={{ marginLeft: '10px', width: '80px' }}
+                />
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     );
-  }, [adjustmentQuantities, handleInputChange]);
+  }, [adjustmentQuantities, handleCheckboxChange, handleInputChange]);
 
 
   return (
@@ -403,10 +444,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
               fullWidth
               label="Сумма общих надбавок"
               type="number"
-              value={totalCommonAdjustments}
-              InputProps={{
-                readOnly: true,
-              }}
+              value={totalCommonAdjustments.totalValue}
               margin="normal"
             />
             <Grid container spacing={2}>
@@ -417,26 +455,26 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
                   type="number"
                   value={basedCostWithAdjustments}
                   margin="normal"
-                  InputProps={{ readOnly: true }}
+
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
+                  disabled
                   fullWidth
                   label="Оценка строения"
                   value={buildingAppraisal}
                   margin="normal"
-                  InputProps={{ readOnly: true }}
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
+                  disabled
                   fullWidth
                   label="Оценка с учетом износа"
                   type="number"
                   value={buildingAppraisalWithWear}
                   margin="normal"
-                  InputProps={{ readOnly: true }}
                 />
               </Grid>
             </Grid>
@@ -446,12 +484,11 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
           <Box>
             {renderCommonAdjustments()}
             <Typography variant="body1" paragraph>
-              <strong>Сумма надбавок:</strong> {totalCommonAdjustments} руб.
-              <div> Примечание. Общие надбавки к оценочной стоимости строения рассчитаны с учетом
-                <p>по теплым полам: устройство теплоизоляции, прокладка электрических кабелей, устройство покрытий цементных (бетонных), установка терморегуляторов;
-                </p>
-                <p>по роллетам оконным (дверным): установка роллет алюминиевых и механических приводов.</p>
-              </div>
+              <strong>Сумма надбавок:</strong> {totalCommonAdjustments?.totalValue || 0} руб.
+            </Typography>
+            <Typography variant='body1'> Примечание. Общие надбавки к оценочной стоимости строения рассчитаны с учетом
+                по теплым полам: устройство теплоизоляции, прокладка электрических кабелей, устройство покрытий цементных (бетонных), установка терморегуляторов;
+                по роллетам оконным (дверным): установка роллет алюминиевых и механических приводов.
             </Typography>
           </Box>
         )}

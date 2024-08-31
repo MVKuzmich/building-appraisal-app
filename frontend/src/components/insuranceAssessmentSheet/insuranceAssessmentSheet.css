@@ -1,0 +1,5 @@
+.vertical-header {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+  }

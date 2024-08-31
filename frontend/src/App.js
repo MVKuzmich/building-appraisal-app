@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Grid2 } from '@mui/material';
 import BuildingTypeList from './components/buildingTypeList/BuildingTypeList';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BuildingTypeSearchForm from './components/buildingTypeSearchForm/BuildingTypeSearchForm';
+import InsuranceAssessmentSheet from './components/insuranceAssessmentSheet/InsuranceAssessmentSheet';
 
 function App() {
   const [buildingTypes, setBuildingTypes] = useState([]);
@@ -17,6 +18,7 @@ function App() {
   const onAddToEstimation = (estimationData) => {
     setEstimationList([...estimationList, estimationData]);
   };
+  console.log(estimationList);
 
   return (
     <Container maxWidth="lg">
@@ -25,6 +27,7 @@ function App() {
           Оценка строений
         </Typography>
         <BuildingTypeSearchForm setBuildingTypes={setBuildingTypes} />
+        {estimationList.length> 0 && <InsuranceAssessmentSheet data={estimationList}/>}
         <BuildingTypeList 
           buildingTypes={buildingTypes} 
           onSelectBuildingType={onSelectBuildingType}
