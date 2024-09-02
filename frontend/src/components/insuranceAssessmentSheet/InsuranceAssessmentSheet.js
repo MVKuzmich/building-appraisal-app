@@ -3,9 +3,12 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './insuranceAssessmentSheet.css';
+import { Button, Box, Modal, IconButton } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import CloseIcon from '@mui/icons-material/Close';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
-const InsuranceAssessmentSheet = ({ data }) => {
-  
+const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
   const gridRef = useRef(null);
 
   const processedData = data.map((item, index) => ({
@@ -81,8 +84,14 @@ const InsuranceAssessmentSheet = ({ data }) => {
 
 
 
-  return (
-    <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
+  const exportToCSV = () => {
+    if (gridRef.current && gridRef.current.api) {
+      gridRef.current.api.exportDataAsCsv();
+    }
+  };
+
+  const gridComponent = (
+    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact
         ref={gridRef}
         rowData={processedData}
@@ -90,6 +99,66 @@ const InsuranceAssessmentSheet = ({ data }) => {
         defaultColDef={{ resizable: true, sortable: false }}
       />
     </div>
+  );
+
+  if (isExpanded) {
+    return (
+      <Modal
+        open={isExpanded}
+        onClose={onClose}
+        aria-labelledby="insurance-assessment-sheet"
+        aria-describedby="insurance-assessment-sheet-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '90%',
+          height: '90%',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          overflow: 'auto',
+        }}>
+          <IconButton 
+            onClick={onClose} 
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Button 
+            onClick={exportToCSV} 
+            startIcon={<DownloadIcon />}
+            variant="contained"
+            sx={{ mb: 2 }}
+          >
+            Скачать CSV
+          </Button>
+          {gridComponent}
+        </Box>
+      </Modal>
+    );
+  }
+
+  return (
+    <Box sx={{ height: '100%', position: 'relative' }}>
+      <IconButton 
+        onClick={onExpand} 
+        sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }}
+      >
+        <FullscreenIcon />
+      </IconButton>
+      <Button 
+        onClick={exportToCSV} 
+        startIcon={<DownloadIcon />}
+        variant="contained"
+        sx={{ position: 'absolute', left: 8, top: 8, zIndex: 1 }}
+      >
+        Скачать CSV
+      </Button>
+      {gridComponent}
+    </Box>
   );
 };
 
