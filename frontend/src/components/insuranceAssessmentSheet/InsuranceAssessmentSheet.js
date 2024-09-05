@@ -16,73 +16,83 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     number: index + 1,
   }));
 
-  const firstItem = processedData[0];
-  /*
 
-  const estimationData = {
-        buildingName: buildingType.estimationSheetData.name,
-        buildingYear,
-        buildingFoundation: buildingType.estimationData.foundation,
-        buildingWalls: buildingType.estimationData.walls,
-        buildingRoof: buildingType.estimationData.roof,     
-        dimensions: buildingDimensions,
-        type: buildingType.type,
-        selectedBasedCost,
-        selectedAdjustments,
-        commonAdjustments,
-        basedCostWithAdjustments,
-        buildingAppraisal,
-        wearRate,
-        buildingAppraisalWithWear
-      };
-  */
-    const handleAdjustments = (item) => {
-      if (!item || !Array.isArray(item.selectedAdjustments)) {
-        return [];
+  const handleAdjustments = (data) => {
+    if (!data || data.length === 0) {
+      return [];
+    }
+  
+    // Object to store the maximum count of each adjustment group
+    const adjustmentGroupCounts = {};
+  
+    // First pass: count the maximum occurrences of each adjustment group
+    data.forEach(item => {
+      if (item.selectedAdjustments) {
+        const groupCounts = {};
+        item.selectedAdjustments.forEach(adj => {
+          groupCounts[adj.adjustmentGroup] = (groupCounts[adj.adjustmentGroup] || 0) + 1;
+          adjustmentGroupCounts[adj.adjustmentGroup] = Math.max(
+            adjustmentGroupCounts[adj.adjustmentGroup] || 0,
+            groupCounts[adj.adjustmentGroup]
+          );
+        });
       }
-      return item.selectedAdjustments.map((adj, index) => {
-        console.log(`функция handleAdj ${adj.adjustmentGroup}: ${adj.adjustmentCost}`);
-        return {
-          headerName: adj.adjustmentGroup,
-          field: `selectedAdjustments[${index}].adjustmentCost`,
+    });
+  
+    // Create column definitions based on the maximum counts
+    const columns = [];
+    Object.entries(adjustmentGroupCounts).forEach(([group, count]) => {
+      for (let i = 0; i < count; i++) {
+        columns.push({
+          headerName: group,
+          field: `adjustments.${group}.${i}`,
+          headerClass: 'vertical-header',
           valueGetter: (params) => {
-            return params.data.selectedAdjustments[index]?.adjustmentCost;
+            if (params.data.selectedAdjustments) {
+              const adjustments = params.data.selectedAdjustments.filter(adj => adj.adjustmentGroup === group);
+              return adjustments[i] ? adjustments[i].adjustmentCost : '-';
+            }
+            return '-';
           }
-        };
-      });
-    };
+        });
+      }
+    });
+  
+    return columns;
+  };
 
   const columnDefs = useMemo(() => [
-    { headerName: '№ п/п', field: 'number' },
-    { headerName: 'Наименование строения', field: 'buildingName' },
+    { headerName: '№ п/п', field: 'number', headerClass: 'ag-header-cell-center'},
+    { headerName: 'Наименование строения', field: 'buildingName', headerClass: 'ag-header-cell-center' },
     {
-      headerName: 'Материал',
+      headerName: 'Материал', headerClass: '.ag-header-cell-label',
       children: [
-        { headerName: 'Фундамент', field: 'buildingFoundation', headerClass: 'vertical-header', suppressSizeToFit: true },
-        { headerName: 'Стены', field: 'buildingWalls', headerClass: 'vertical-header', suppressSizeToFit: true },
-        { headerName: 'Крыша', field: 'buildingRoof', headerClass: 'vertical-header', suppressSizeToFit: true },
+        { headerName: 'Фундамент', field: 'buildingFoundation', headerClass: 'vertical-header' },
+        { headerName: 'Стены', field: 'buildingWalls', headerClass: 'vertical-header' },
+        { headerName: 'Крыша', field: 'buildingRoof', headerClass: 'vertical-header' },
       ],
     },
     {
-      headerName: 'Размеры',
+      headerName: 'Размеры', headerClass: '.ag-header-cell-label',
       children: [
-        { headerName: 'Длина', field: 'dimensions.length', headerClass: 'vertical-header', suppressSizeToFit: true },
-        { headerName: 'Ширина', field: 'dimensions.width', headerClass: 'vertical-header', suppressSizeToFit: true },
-        { headerName: 'Высота', field: 'dimensions.height', headerClass: 'vertical-header', suppressSizeToFit: true },
+        { headerName: 'Длина', field: 'dimensions.length', headerClass: 'vertical-header' },
+        { headerName: 'Ширина', field: 'dimensions.width', headerClass: 'vertical-header' },
+        { headerName: 'Высота', field: 'dimensions.height', headerClass: 'vertical-header' },
       ],
     },
-    { headerName: 'Тип', field: 'type' },
+    { headerName: 'Тип', field: 'type', headerClass: 'ag-header-cell-center' },
     { headerName: 'Оценочная норма', field: 'selectedBasedCost' },
     {
-      headerName: 'Надбавки',
-      children: handleAdjustments(firstItem),  
+      headerName: 'Надбавки', headerClass: '.ag-header-cell-label',
+      children: handleAdjustments(processedData) || '-',  
     },
-    { headerName: 'Оценочная норма с учетом отклонений', field: 'basedCostWithAdjustments' },
-    { headerName: 'Процент износа', field: 'wearRate' },
-    { headerName: 'Страховая стоимость', field: 'buildingAppraisalWithWear'},
-  ], []);
-
-
+    { headerName: 'Оценочная норма с учетом отклонений', field: 'basedCostWithAdjustments', headerClass: 'ag-header-cell-center'},
+    { headerName: 'Общие надбавки', field: 'totalCommonAdjustments.totalValue', headerClass: 'ag-header-cell-center'},
+    { headerName: 'Оценка строений в базисных ценах', field: 'buildingAppraisal', headerClass: 'ag-header-cell-center'},
+    { headerName: 'Процент износа', field: 'wearRate', headerClass: 'ag-header-cell-center' },
+    { headerName: 'Действительная стоимость в ценах 1991г (с учетом износа)', field: 'buildingAppraisalWithWear', headerClass: 'ag-header-cell-center' },
+    { headerName: 'Страховая сумма', field: '', headerClass: 'ag-header-cell-center'},
+  ], [processedData]);
 
   const exportToCSV = () => {
     if (gridRef.current && gridRef.current.api) {
@@ -90,13 +100,37 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     }
   };
 
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleCloseClick = (e) => {
+    e.stopPropagation();
+    onClose();
+  };
+
+  const handleExpandClick = (e) => {
+    e.stopPropagation();
+    onExpand();
+  };
+
+  const autoSizeStrategy = {
+    type: 'fitCellContents'
+  };
+
   const gridComponent = (
-    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+    <div 
+      className="ag-theme-alpine" 
+      style={{ height: '100%', width: '100%' }}
+      onClick={handleContentClick}
+    >
       <AgGridReact
+        autoSizeStrategy={autoSizeStrategy}
+        headerHeight={100}
         ref={gridRef}
         rowData={processedData}
         columnDefs={columnDefs}
-        defaultColDef={{ resizable: true, sortable: false }}
+        defaultColDef={{ resizable: true, sortable: false, wrapHeaderText: true }}
       />
     </div>
   );
@@ -105,30 +139,40 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     return (
       <Modal
         open={isExpanded}
-        onClose={onClose}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            onClose();
+          }
+        }}
         aria-labelledby="insurance-assessment-sheet"
         aria-describedby="insurance-assessment-sheet-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '90%',
-          height: '90%',
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          overflow: 'auto',
-        }}>
+        <Box 
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            height: '90%',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            overflow: 'auto',
+          }}
+          onClick={handleContentClick}
+        >
           <IconButton 
-            onClick={onClose} 
+            onClick={handleCloseClick} 
             sx={{ position: 'absolute', right: 8, top: 8 }}
           >
             <CloseIcon />
           </IconButton>
           <Button 
-            onClick={exportToCSV} 
+            onClick={(e) => {
+              e.stopPropagation();
+              exportToCSV();
+            }} 
             startIcon={<DownloadIcon />}
             variant="contained"
             sx={{ mb: 2 }}
@@ -142,15 +186,21 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
   }
 
   return (
-    <Box sx={{ height: '100%', position: 'relative' }}>
+    <Box 
+      sx={{ height: '100%', position: 'relative' }}
+      onClick={handleContentClick}
+    >
       <IconButton 
-        onClick={onExpand} 
+        onClick={handleExpandClick} 
         sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }}
       >
         <FullscreenIcon />
       </IconButton>
       <Button 
-        onClick={exportToCSV} 
+        onClick={(e) => {
+          e.stopPropagation();
+          exportToCSV();
+        }} 
         startIcon={<DownloadIcon />}
         variant="contained"
         sx={{ position: 'absolute', left: 8, top: 8, zIndex: 1 }}

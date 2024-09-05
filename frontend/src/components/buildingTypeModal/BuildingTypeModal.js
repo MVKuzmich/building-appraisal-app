@@ -34,7 +34,6 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
     cubic: 0,
     area: 0
   });
-  const [commonAdjustments, setCommonAdjustments] = useState([]);
   const [adjustmentQuantities, setAdjustmentQuantities] = useState({});
   const [totalCommonAdjustments, setTotalCommonAdjustments] = useState({});
 
@@ -127,7 +126,6 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
       cubic: 0,
       area: 0
     });
-    setCommonAdjustments([]);
     setAdjustmentQuantities({});
     setTotalCommonAdjustments(0);
   }, []);
@@ -152,7 +150,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
       type: buildingType.type,
       selectedBasedCost,
       selectedAdjustments,
-      commonAdjustments,
+      totalCommonAdjustments,
       basedCostWithAdjustments,
       buildingAppraisal,
       wearRate,
@@ -160,7 +158,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
     };
     onAddToEstimation(estimationData);
     handleClose();
-  }, [buildingType.estimationSheetData.name, buildingType.estimationSheetData.foundation, buildingType.estimationSheetData.walls, buildingType.estimationSheetData.roof, buildingType.type, buildingYear, buildingDimensions, selectedBasedCost, selectedAdjustments, commonAdjustments, basedCostWithAdjustments, buildingAppraisal, buildingAppraisalWithWear, onAddToEstimation, handleClose]);
+  }, [buildingType.estimationSheetData.name, buildingType.estimationSheetData.foundation, buildingType.estimationSheetData.walls, buildingType.estimationSheetData.roof, buildingType.type, buildingYear, buildingDimensions, selectedBasedCost, selectedAdjustments, totalCommonAdjustments, basedCostWithAdjustments, buildingAppraisal, buildingAppraisalWithWear, onAddToEstimation, handleClose]);
 
   const handleDimensionChange = useCallback((dimension, value) => {
     const numValue = parseFloat(value) || 0;

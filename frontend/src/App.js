@@ -20,8 +20,12 @@ function App() {
     setEstimationList([...estimationList, estimationData]);
   };
 
-  const toggleSheetExpansion = () => {
-    setIsSheetExpanded(!isSheetExpanded);
+  const handleSheetExpand = () => {
+    setIsSheetExpanded(true);
+  };
+
+  const handleSheetClose = () => {
+    setIsSheetExpanded(false);
   };
 
   return (
@@ -48,13 +52,13 @@ function App() {
                   transform: 'scale(1.02)',
                 },
               }}
-              onClick={toggleSheetExpansion}
             >
               {estimationList.length > 0 && (
                 <InsuranceAssessmentSheet 
                   data={estimationList}
                   isExpanded={isSheetExpanded}
-                  onClose={() => setIsSheetExpanded(false)}
+                  onClose={handleSheetClose}
+                  onExpand={handleSheetExpand}
                 />
               )}
             </Paper>
