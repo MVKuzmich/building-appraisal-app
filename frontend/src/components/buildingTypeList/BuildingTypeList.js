@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import BuildingTypeModal from '../buildingTypeModal/BuildingTypeModal';
 
-const BuildingTypeList = ({ buildingTypes, onSelectBuildingType, onAddToEstimation }) => {
+const BuildingTypeList = ({ buildingTypes, setBuildingTypes, onSelectBuildingType, onAddToEstimation }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBuildingType, setSelectedBuildingType] = useState(null);
 
@@ -55,6 +55,7 @@ const BuildingTypeList = ({ buildingTypes, onSelectBuildingType, onAddToEstimati
         onClose={() => setModalOpen(false)}
         buildingType={selectedBuildingType}
         onAddToEstimation={onAddToEstimation}
+        setBuildingTypes={setBuildingTypes}
       />}
     </Paper>
   );

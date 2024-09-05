@@ -22,7 +22,7 @@ import {
   Checkbox
 } from '@mui/material';
 
-const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) => {
+const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, setBuildingTypes }) => {
   const [selectedBasedCost, setSelectedBasedCost] = useState(0);
   const [selectedAdjustments, setSelectedAdjustments] = useState([]);
   const [wearRate, setWearRate] = useState(0);
@@ -158,6 +158,8 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation }) =
     };
     onAddToEstimation(estimationData);
     handleClose();
+    setBuildingTypes([]);
+
   }, [buildingType.estimationSheetData.name, buildingType.estimationSheetData.foundation, buildingType.estimationSheetData.walls, buildingType.estimationSheetData.roof, buildingType.type, buildingYear, buildingDimensions, selectedBasedCost, selectedAdjustments, totalCommonAdjustments, basedCostWithAdjustments, buildingAppraisal, buildingAppraisalWithWear, onAddToEstimation, handleClose]);
 
   const handleDimensionChange = useCallback((dimension, value) => {

@@ -67,7 +67,8 @@ function App() {
         <Box mt={3}>
           <Paper elevation={3} sx={{ p: 2 }}>
             <BuildingTypeList 
-              buildingTypes={buildingTypes} 
+              buildingTypes={buildingTypes}
+              setBuildingTypes={setBuildingTypes} 
               onSelectBuildingType={onSelectBuildingType}
               onAddToEstimation={onAddToEstimation}
             />
