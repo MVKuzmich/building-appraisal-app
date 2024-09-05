@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -18,16 +18,16 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
 
 
   const handleAdjustments = (data) => {
-    if (!data || data.length === 0) {
-      return [];
-    }
+    let columns = [];
+    let hasAdjustments = false;
   
     // Object to store the maximum count of each adjustment group
     const adjustmentGroupCounts = {};
   
     // First pass: count the maximum occurrences of each adjustment group
     data.forEach(item => {
-      if (item.selectedAdjustments) {
+      if (item.selectedAdjustments && item.selectedAdjustments.length > 0) {
+        hasAdjustments = true;
         const groupCounts = {};
         item.selectedAdjustments.forEach(adj => {
           groupCounts[adj.adjustmentGroup] = (groupCounts[adj.adjustmentGroup] || 0) + 1;
@@ -39,24 +39,33 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
       }
     });
   
-    // Create column definitions based on the maximum counts
-    const columns = [];
-    Object.entries(adjustmentGroupCounts).forEach(([group, count]) => {
-      for (let i = 0; i < count; i++) {
-        columns.push({
-          headerName: group,
-          field: `adjustments.${group}.${i}`,
-          headerClass: 'vertical-header',
-          valueGetter: (params) => {
-            if (params.data.selectedAdjustments) {
-              const adjustments = params.data.selectedAdjustments.filter(adj => adj.adjustmentGroup === group);
-              return adjustments[i] ? adjustments[i].adjustmentCost : '-';
+    // If no adjustments were found, add a single column with a dash
+    if (!hasAdjustments) {
+      columns.push({
+        headerName: 'Надбавки',
+        field: 'noAdjustments',
+        headerClass: 'vertical-header',
+        valueGetter: () => '-'
+      });
+    } else {
+      // Create column definitions based on the maximum counts
+      Object.entries(adjustmentGroupCounts).forEach(([group, count]) => {
+        for (let i = 0; i < count; i++) {
+          columns.push({
+            headerName: group,
+            field: `adjustments.${group}.${i}`,
+            headerClass: 'vertical-header',
+            valueGetter: (params) => {
+              if (params.data.selectedAdjustments) {
+                const adjustments = params.data.selectedAdjustments.filter(adj => adj.adjustmentGroup === group);
+                return adjustments[i] ? adjustments[i].adjustmentCost : '-';
+              }
+              return '-';
             }
-            return '-';
-          }
-        });
-      }
-    });
+          });
+        }
+      });
+    }
   
     return columns;
   };
@@ -84,7 +93,7 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     { headerName: 'Оценочная норма', field: 'selectedBasedCost' },
     {
       headerName: 'Надбавки', headerClass: '.ag-header-cell-label',
-      children: handleAdjustments(processedData) || '-',  
+      children: handleAdjustments(processedData),  
     },
     { headerName: 'Оценочная норма с учетом отклонений', field: 'basedCostWithAdjustments', headerClass: 'ag-header-cell-center'},
     { headerName: 'Общие надбавки', field: 'totalCommonAdjustments.totalValue', headerClass: 'ag-header-cell-center'},
@@ -115,8 +124,22 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
   };
 
   const autoSizeStrategy = {
-    type: 'fitCellContents'
+    type: 'fitCellContents',
+    defaultMinWidth: 100,
+    skipHeader: true,
+    columnLimits: [
+      {
+        colId: 'number',
+        minWidth: 60,
+        maxWidth: 80
+      }
+    ]
   };
+
+  const onFirstDataRendered = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+    params.api.autoSizeAllColumns();
+  }, []);
 
   const gridComponent = (
     <div 
@@ -130,7 +153,8 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
         ref={gridRef}
         rowData={processedData}
         columnDefs={columnDefs}
-        defaultColDef={{ resizable: true, sortable: false, wrapHeaderText: true }}
+        defaultColDef={{ resizable: true, sortable: false, wrapHeaderText: true, autoHeight: true, wrapText: true}}
+        onFirstDataRendered={onFirstDataRendered}
       />
     </div>
   );
