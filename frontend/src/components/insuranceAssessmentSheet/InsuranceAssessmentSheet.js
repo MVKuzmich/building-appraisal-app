@@ -100,7 +100,7 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     { headerName: 'Оценка строений в базисных ценах', field: 'buildingAppraisal', headerClass: 'ag-header-cell-center'},
     { headerName: 'Процент износа', field: 'wearRate', headerClass: 'ag-header-cell-center' },
     { headerName: 'Действительная стоимость в ценах 1991г (с учетом износа)', field: 'buildingAppraisalWithWear', headerClass: 'ag-header-cell-center' },
-    { headerName: 'Страховая сумма', field: '', headerClass: 'ag-header-cell-center'},
+    { headerName: 'Страховая сумма', field: 'insuredValue', headerClass: 'ag-header-cell-center'},
   ], [processedData]);
 
   const exportToCSV = () => {

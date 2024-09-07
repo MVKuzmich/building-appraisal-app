@@ -105,12 +105,17 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
   }, [buildingDimensions, basedCostWithAdjustments]);
 
   const buildingAppraisal = useMemo(() => {
-    return getTotalBasedCost(buildingType.normAppliance) + parseFloat(totalCommonAdjustments?.totalValue || 0);
+    return parseFloat(getTotalBasedCost(buildingType.normAppliance).toFixed(2)) + parseFloat(totalCommonAdjustments?.totalValue || 0);
   }, [getTotalBasedCost, buildingType.normAppliance, totalCommonAdjustments]);
 
   const buildingAppraisalWithWear = useMemo(() => {
-    return parseFloat((buildingAppraisal * (1 - wearRate / 100)).toFixed(0));
+    return parseFloat((buildingAppraisal * (1 - wearRate / 100)).toFixed(2));
   }, [buildingAppraisal, wearRate]);
+
+  const insuredValue = useMemo(() => {
+    return parseFloat((buildingAppraisalWithWear * 0.5).toFixed(2));
+  }, [buildingAppraisalWithWear]);
+
   
   
 
@@ -152,9 +157,10 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
       selectedAdjustments,
       totalCommonAdjustments,
       basedCostWithAdjustments,
-      buildingAppraisal,
+      buildingAppraisal: parseFloat(buildingAppraisal.toFixed(2)),
       wearRate,
-      buildingAppraisalWithWear
+      buildingAppraisalWithWear: parseFloat(buildingAppraisalWithWear.toFixed(2)),
+      insuredValue
     };
     onAddToEstimation(estimationData);
     handleClose();
@@ -172,8 +178,8 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
         newDimensions.width = 0;
         newDimensions.height = 0;
       } else {
-        newDimensions.cubic = newDimensions.length * newDimensions.width * newDimensions.height;
-        newDimensions.area = newDimensions.length * newDimensions.width;
+        newDimensions.cubic = parseFloat((newDimensions.length * newDimensions.width * newDimensions.height).toFixed(2));
+        newDimensions.area = parseFloat((newDimensions.length * newDimensions.width).toFixed(2));
       }
       
       return newDimensions;
@@ -448,7 +454,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
               margin="normal"
             />
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   fullWidth
                   label="Норма с учетом отклонений"
@@ -458,7 +464,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
 
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   disabled
                   fullWidth
@@ -467,13 +473,23 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
                   margin="normal"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   disabled
                   fullWidth
                   label="Оценка с учетом износа"
                   type="number"
                   value={buildingAppraisalWithWear}
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  label="Страховая сумма"
+                  type="number"
+                  value={insuredValue}
                   margin="normal"
                 />
               </Grid>
