@@ -10,7 +10,8 @@ export const useHttp = () => {
             method = 'GET',
             body = null,
             headers = {'Content-Type': 'application/json'},
-            params = {}
+            params = {},
+            responseType = 'json'
         ) => {
         setLoading(true);
 
@@ -36,7 +37,14 @@ export const useHttp = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
+            let data;
+            if (responseType === 'blob') {
+                data = await response.blob();
+            } else if (responseType === 'text') {
+                data = await response.text();
+            } else {
+                data = await response.json();
+            }
 
             setLoading(false);
             return data;

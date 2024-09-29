@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "ag-grid-react": "^32.1.0",
     "bootstrap": "^5.3.3",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.6",
     "formik-mui": "^5.0.0-alpha.0",
     "formik-mui-x-date-pickers": "^0.0.1",

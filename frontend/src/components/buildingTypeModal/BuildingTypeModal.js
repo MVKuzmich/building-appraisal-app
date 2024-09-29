@@ -132,7 +132,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
       area: 0
     });
     setAdjustmentQuantities({});
-    setTotalCommonAdjustments(0);
+    setTotalCommonAdjustments({});
   }, []);
 
   const handleClose = useCallback((event, reason) => {
@@ -146,6 +146,7 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
 
   const handleAddToEstimation = useCallback(() => {
     const estimationData = {
+      normAppliance: buildingType.normAppliance,
       buildingName: buildingType.estimationSheetData.name,
       buildingYear,
       buildingFoundation: buildingType.estimationSheetData.foundation,

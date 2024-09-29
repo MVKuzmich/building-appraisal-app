@@ -1281,7 +1281,7 @@
         "estimationSheetData": {
             "name": "Жилой дом 1 эт.",
             "foundation": "камен./бетон.",
-            "walls": "каркасно-засыпные",
+            "walls": "каркас.-засып.",
             "roof": "асбестоцем."
         },
         "basedCostsDependency": "Объем строения, куб.м.",

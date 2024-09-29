@@ -1,19 +1,24 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './insuranceAssessmentSheet.css';
-import { Button, Box, Modal, IconButton } from '@mui/material';
+import { Button, Box, Modal, IconButton, CircularProgress } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import BuildingService from '../../services/BuildingsService';
+import saveAs from 'file-saver';
 
 const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
+  const [isExporting, setIsExporting] = useState(false);
+
   const gridRef = useRef(null);
+  const {exportToExcel, error} = BuildingService();
 
   const processedData = data.map((item, index) => ({
     ...item,
-    number: index + 1,
+    orderedNumber: index + 1,
   }));
 
 
@@ -71,7 +76,7 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
   };
 
   const columnDefs = useMemo(() => [
-    { headerName: '№ п/п', field: 'number', headerClass: 'ag-header-cell-center'},
+    { headerName: '№ п/п', field: 'orderedNumber', headerClass: 'ag-header-cell-center'},
     { headerName: 'Наименование строения', field: 'buildingName', headerClass: 'ag-header-cell-center' },
     {
       headerName: 'Материал', headerClass: '.ag-header-cell-label',
@@ -89,6 +94,8 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
         { headerName: 'Высота', field: 'dimensions.height', headerClass: 'vertical-header' },
       ],
     },
+    { headerName: 'Площадь основания', field: 'dimensions.area', headerClass: 'vertical-header' },
+    { headerName: 'Кубатура строения', field: 'dimensions.cubic', headerClass: 'vertical-header' },
     { headerName: 'Тип', field: 'type', headerClass: 'ag-header-cell-center' },
     { headerName: 'Оценочная норма', field: 'selectedBasedCost' },
     {
@@ -103,11 +110,38 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     { headerName: 'Страховая сумма', field: 'insuredValue', headerClass: 'ag-header-cell-center'},
   ], [processedData]);
 
-  const exportToCSV = () => {
-    if (gridRef.current && gridRef.current.api) {
-      gridRef.current.api.exportDataAsCsv();
-    }
-  };
+  // const dataAsCsv= () => {
+  //   if (gridRef.current && gridRef.current.api) {
+  //     return gridRef.current.api.getDataAsCsv();
+  //   }
+  //   return null;
+  // };
+
+  // const convertCsvToJson = (csv) => {
+  //   const result = parse(csv, {
+  //     header: true, // Указывает, что первая строка содержит заголовки
+  //     skipEmptyLines: true // Пропускает пустые строки
+  //   });
+  //   return result.data;
+  // };
+
+  
+  const exportToXLSX = () => {
+      try {
+        console.log(processedData);
+        setIsExporting(true);
+        exportToExcel(processedData).then(res => 
+          saveAs(
+            new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+            'InsuranceAssessmentSheet.xlsx')
+          );
+      } catch (e) {
+        console.error('Error exporting to XLSX:', e);
+      } finally {
+        setIsExporting(false);
+      }
+    };
+  
 
   const handleContentClick = (e) => {
     e.stopPropagation();
@@ -195,13 +229,13 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
           <Button 
             onClick={(e) => {
               e.stopPropagation();
-              exportToCSV();
+              exportToXLSX();
             }} 
             startIcon={<DownloadIcon />}
             variant="contained"
             sx={{ mb: 2 }}
           >
-            Скачать CSV
+            Скачать XLSX
           </Button>
           {gridComponent}
         </Box>
@@ -221,16 +255,19 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
         <FullscreenIcon />
       </IconButton>
       <Button 
-        onClick={(e) => {
-          e.stopPropagation();
-          exportToCSV();
-        }} 
-        startIcon={<DownloadIcon />}
+        onClick={exportToXLSX} 
+        startIcon={isExporting ? <CircularProgress size={20} /> : <DownloadIcon />}
         variant="contained"
         sx={{ position: 'absolute', left: 8, top: 8, zIndex: 1 }}
+        disabled={isExporting}
       >
-        Скачать CSV
+        {isExporting ? 'Экспорт...' : 'Скачать XLSX'}
       </Button>
+      {error && (
+        <div style={{ color: 'red', position: 'absolute', left: 8, top: 48, zIndex: 1 }}>
+          Ошибка: {error}
+        </div>
+      )}
       {gridComponent}
     </Box>
   );

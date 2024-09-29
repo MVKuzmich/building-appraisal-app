@@ -8,8 +8,20 @@ const BuildingService = () => {
         const res = await request("http://localhost:8080/building-types", 'GET', null, {'Content-Type': 'application/json'}, params);
         return res;
     }
+    const exportToExcel = async (data) => {
+        clearError();
+        const response = await request("http://localhost:8080/export-to-xlsx", 'POST', 
+           data,
+            { 'Content-Type': 'application/json' },
+            {},
+            'blob'
+        );
+        return response;
+    }
 
-    return {loading, error, getBuildingTypes};
+    return {loading, error, getBuildingTypes, exportToExcel};
+    
 }
+
 
 export default BuildingService;
