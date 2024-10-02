@@ -4,14 +4,19 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './insuranceAssessmentSheet.css';
 import { Button, Box, Modal, IconButton, CircularProgress } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import BuildingService from '../../services/BuildingsService';
 import saveAs from 'file-saver';
 
-const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
+const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDeleteBuilding }) => {
   const [isExporting, setIsExporting] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [buildingToDelete, setBuildingToDelete] = useState(null);
+
 
   const gridRef = useRef(null);
   const {exportToExcel, error} = BuildingService();
@@ -20,6 +25,24 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     ...item,
     orderedNumber: index + 1,
   }));
+
+  const handleDeleteClick = (orderedNumber) => {
+    setBuildingToDelete(orderedNumber);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (buildingToDelete) {
+      onDeleteBuilding(buildingToDelete);
+      setDeleteConfirmOpen(false);
+      setBuildingToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setBuildingToDelete(null);
+  };
 
 
   const handleAdjustments = (data) => {
@@ -76,6 +99,21 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
   };
 
   const columnDefs = useMemo(() => [
+    {
+      headerName: '',
+      field: 'actions',
+      width: 100,
+      cellRenderer: (params) => (
+        <IconButton
+          onClick={() => handleDeleteClick(params.data.orderedNumber)}
+          size="small"
+          color="error"
+          aria-label="delete"
+        >
+          <DeleteIcon />
+        </IconButton>
+      ),
+    },
     { headerName: '№ п/п', field: 'orderedNumber', headerClass: 'ag-header-cell-center'},
     { headerName: 'Наименование строения', field: 'buildingName', headerClass: 'ag-header-cell-center' },
     {
@@ -108,6 +146,7 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
     { headerName: 'Процент износа', field: 'wearRate', headerClass: 'ag-header-cell-center' },
     { headerName: 'Действительная стоимость в ценах 1991г (с учетом износа)', field: 'buildingAppraisalWithWear', headerClass: 'ag-header-cell-center' },
     { headerName: 'Страховая сумма', field: 'insuredValue', headerClass: 'ag-header-cell-center'},
+    
   ], [processedData]);
 
   // const dataAsCsv= () => {
@@ -195,81 +234,116 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand }) => {
 
   if (isExpanded) {
     return (
-      <Modal
-        open={isExpanded}
-        onClose={(event, reason) => {
-          if (reason !== 'backdropClick') {
-            onClose();
-          }
-        }}
-        aria-labelledby="insurance-assessment-sheet"
-        aria-describedby="insurance-assessment-sheet-description"
-      >
-        <Box 
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '90%',
-            height: '90%',
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            overflow: 'auto',
+      <>
+        <Modal
+          open={isExpanded}
+          onClose={(event, reason) => {
+            if (reason !== 'backdropClick') {
+              onClose();
+            }
           }}
-          onClick={handleContentClick}
+          aria-labelledby="insurance-assessment-sheet"
+          aria-describedby="insurance-assessment-sheet-description"
         >
-          <IconButton 
-            onClick={handleCloseClick} 
-            sx={{ position: 'absolute', right: 8, top: 8 }}
+          <Box 
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '90%',
+              height: '90%',
+              bgcolor: 'background.paper',
+              boxShadow: 24,
+              p: 4,
+              overflow: 'auto',
+            }}
+            onClick={handleContentClick}
           >
-            <CloseIcon />
-          </IconButton>
-          <Button 
-            onClick={(e) => {
-              e.stopPropagation();
-              exportToXLSX();
-            }} 
-            startIcon={<DownloadIcon />}
-            variant="contained"
-            sx={{ mb: 2 }}
-          >
-            Скачать XLSX
-          </Button>
-          {gridComponent}
-        </Box>
-      </Modal>
+            <IconButton 
+              onClick={handleCloseClick} 
+              sx={{ position: 'absolute', right: 8, top: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Button 
+              onClick={(e) => {
+                e.stopPropagation();
+                exportToXLSX();
+              }} 
+              startIcon={<DownloadIcon />}
+              variant="contained"
+              sx={{ mb: 2 }}
+            >
+              Скачать XLSX
+            </Button>
+            {gridComponent}
+            <Dialog
+              open={deleteConfirmOpen}
+              onClose={handleCancelDelete}
+            >
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete the building type with ordered number {buildingToDelete}? This action cannot be undone.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCancelDelete}>Cancel</Button>
+                <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </Modal>
+      </>      
     );
   }
 
   return (
-    <Box 
-      sx={{ height: '100%', position: 'relative' }}
-      onClick={handleContentClick}
-    >
-      <IconButton 
-        onClick={handleExpandClick} 
-        sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }}
+    <>
+      <Box 
+        sx={{ height: '100%', position: 'relative' }}
+        onClick={handleContentClick}
       >
-        <FullscreenIcon />
-      </IconButton>
-      <Button 
-        onClick={exportToXLSX} 
-        startIcon={isExporting ? <CircularProgress size={20} /> : <DownloadIcon />}
-        variant="contained"
-        sx={{ position: 'absolute', left: 8, top: 8, zIndex: 1 }}
-        disabled={isExporting}
-      >
-        {isExporting ? 'Экспорт...' : 'Скачать XLSX'}
-      </Button>
-      {error && (
-        <div style={{ color: 'red', position: 'absolute', left: 8, top: 48, zIndex: 1 }}>
-          Ошибка: {error}
-        </div>
-      )}
-      {gridComponent}
-    </Box>
+        <IconButton 
+          onClick={handleExpandClick} 
+          sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }}
+        >
+          <FullscreenIcon />
+        </IconButton>
+        <Button 
+          onClick={exportToXLSX} 
+          startIcon={isExporting ? <CircularProgress size={20} /> : <DownloadIcon />}
+          variant="contained"
+          sx={{ position: 'absolute', left: 8, top: 8, zIndex: 1 }}
+          disabled={isExporting}
+        >
+          {isExporting ? 'Экспорт...' : 'Скачать XLSX'}
+        </Button>
+        {error && (
+          <div style={{ color: 'red', position: 'absolute', left: 8, top: 48, zIndex: 1 }}>
+            Ошибка: {error}
+          </div>
+        )}
+        {gridComponent}
+        <Dialog
+          open={deleteConfirmOpen}
+          onClose={handleCancelDelete}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete the building type with ordered number {buildingToDelete}? This action cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete}>Cancel</Button>
+            <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </>
+    
   );
 };
 

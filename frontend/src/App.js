@@ -28,6 +28,10 @@ function App() {
     setIsSheetExpanded(false);
   };
 
+  const handleDeleteBuilding = (orderedNumber) => {
+    setEstimationList(prevList => prevList.filter((_, index) => index + 1 !== orderedNumber));
+  };
+
   return (
     <Container maxWidth="xl">
       <Box my={4}>
@@ -59,6 +63,7 @@ function App() {
                   isExpanded={isSheetExpanded}
                   onClose={handleSheetClose}
                   onExpand={handleSheetExpand}
+                  onDeleteBuilding={handleDeleteBuilding}
                 />
               )}
             </Paper>
