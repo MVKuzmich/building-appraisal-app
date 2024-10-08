@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import BuildingService from '../../services/BuildingsService';
 import saveAs from 'file-saver';
+import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
 const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDeleteBuilding }) => {
   const [isExporting, setIsExporting] = useState(false);
@@ -277,7 +278,9 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDelet
             >
               Скачать XLSX
             </Button>
-            {gridComponent}
+            <ErrorBoundary>
+              {gridComponent}
+            </ErrorBoundary>
             <Dialog
               open={deleteConfirmOpen}
               onClose={handleCancelDelete}
@@ -325,7 +328,9 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDelet
             Ошибка: {error}
           </div>
         )}
-        {gridComponent}
+        <ErrorBoundary>
+          {gridComponent}
+        </ErrorBoundary>
         <Dialog
           open={deleteConfirmOpen}
           onClose={handleCancelDelete}

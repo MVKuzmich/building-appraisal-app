@@ -21,6 +21,7 @@ import {
   Grid,
   Checkbox
 } from '@mui/material';
+import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
 const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, setBuildingTypes }) => {
   const [selectedBasedCost, setSelectedBasedCost] = useState(0);
@@ -351,173 +352,180 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>{buildingType.type}. {buildingType.name}</DialogTitle>
-      <DialogContent>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-          <Tab label="Основная информация" />
-          <Tab label="Общие надбавки" />
-        </Tabs>
-        {activeTab === 0 && (
-          <Box>
-            <Typography variant="body1" paragraph>
-              <strong>Описание:</strong> {buildingType.description}
-            </Typography>
-            <Grid container spacing={2} direction="row">
-              <Grid item xs={6}>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Год постройки"
-                      value={buildingYear}
-                      onChange={(e) => setBuildingYear(e.target.value)}
-                      margin="normal"
-                    />
+      <ErrorBoundary>
+        <DialogTitle>{buildingType.type}. {buildingType.name}</DialogTitle>
+        <DialogContent>
+          <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+            <Tab label="Основная информация" />
+            <Tab label="Общие надбавки" />
+          </Tabs>
+          {activeTab === 0 && (
+            <Box>
+              <Typography variant="body1" paragraph>
+                <strong>Описание:</strong> {buildingType.description}
+              </Typography>
+              <Grid container spacing={2} direction="row">
+                <Grid item xs={6}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label="Год постройки"
+                        value={buildingYear}
+                        onChange={(e) => setBuildingYear(e.target.value)}
+                        margin="normal"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label="Процент износа"
+                        type="number"
+                        value={wearRate}
+                        onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
+                        margin="normal"
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
+                </Grid>
+                <Grid item xs={4}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={4}>
                     <TextField
-                      fullWidth
-                      label="Процент износа"
-                      type="number"
-                      value={wearRate}
-                      onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
-                      margin="normal"
-                    />
+                        fullWidth
+                        label="Длина строения"
+                        type="number"
+                        value={buildingDimensions.length || ''}
+                        onChange={(e) => handleDimensionChange('length', e.target.value)}
+                        margin="normal"
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label="Ширина строения"
+                        type="number"
+                        value={buildingDimensions.width || ''}
+                        onChange={(e) => handleDimensionChange('width', e.target.value)}
+                        margin="normal"
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label="Высота строения"
+                        type="number"
+                        value={buildingDimensions.height || ''}
+                        onChange={(e) => handleDimensionChange('height', e.target.value)}
+                        margin="normal"
+                      />       
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={6}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="Объем строения"
+                        type="number"
+                        value={buildingDimensions.cubic || ''}
+                        onChange={(e) => handleDimensionChange('cubic', e.target.value)}
+                        margin="normal"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label="Площадь строения"
+                        type="number"
+                        value={buildingDimensions.area || ''}
+                        onChange={(e) => handleDimensionChange('area', e.target.value)}
+                        margin="normal"
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
+              <ErrorBoundary>
+                {renderBaseCosts()}
+              </ErrorBoundary>
+              <ErrorBoundary>
+                {renderAdjustments()}  
+              </ErrorBoundary>
+              <TextField
+                fullWidth
+                label="Сумма общих надбавок"
+                type="number"
+                value={totalCommonAdjustments.totalValue}
+                margin="normal"
+              />
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
                   <TextField
-                      fullWidth
-                      label="Длина строения"
-                      type="number"
-                      value={buildingDimensions.length || ''}
-                      onChange={(e) => handleDimensionChange('length', e.target.value)}
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      label="Ширина строения"
-                      type="number"
-                      value={buildingDimensions.width || ''}
-                      onChange={(e) => handleDimensionChange('width', e.target.value)}
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      label="Высота строения"
-                      type="number"
-                      value={buildingDimensions.height || ''}
-                      onChange={(e) => handleDimensionChange('height', e.target.value)}
-                      margin="normal"
-                    />       
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={6}>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                  <TextField
-                      fullWidth
-                      label="Объем строения"
-                      type="number"
-                      value={buildingDimensions.cubic || ''}
-                      onChange={(e) => handleDimensionChange('cubic', e.target.value)}
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Площадь строения"
-                      type="number"
-                      value={buildingDimensions.area || ''}
-                      onChange={(e) => handleDimensionChange('area', e.target.value)}
-                      margin="normal"
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            {renderBaseCosts()}
-            {renderAdjustments()}
-            <TextField
-              fullWidth
-              label="Сумма общих надбавок"
-              type="number"
-              value={totalCommonAdjustments.totalValue}
-              margin="normal"
-            />
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  label="Норма с учетом отклонений"
-                  type="number"
-                  value={basedCostWithAdjustments}
-                  margin="normal"
+                    fullWidth
+                    label="Норма с учетом отклонений"
+                    type="number"
+                    value={basedCostWithAdjustments}
+                    margin="normal"
 
-                />
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    disabled
+                    fullWidth
+                    label="Оценка строения"
+                    value={buildingAppraisal}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    disabled
+                    fullWidth
+                    label="Оценка с учетом износа"
+                    type="number"
+                    value={buildingAppraisalWithWear}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    disabled
+                    fullWidth
+                    label="Страховая сумма"
+                    type="number"
+                    value={insuredValue}
+                    margin="normal"
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  disabled
-                  fullWidth
-                  label="Оценка строения"
-                  value={buildingAppraisal}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  disabled
-                  fullWidth
-                  label="Оценка с учетом износа"
-                  type="number"
-                  value={buildingAppraisalWithWear}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  disabled
-                  fullWidth
-                  label="Страховая сумма"
-                  type="number"
-                  value={insuredValue}
-                  margin="normal"
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        )}
-        {activeTab === 1 && (
-          <Box>
-            {renderCommonAdjustments()}
-            <Typography variant="body1" paragraph>
-              <strong>Сумма надбавок:</strong> {totalCommonAdjustments?.totalValue || 0} руб.
-            </Typography>
-            <Typography variant='body1'> Примечание. Общие надбавки к оценочной стоимости строения рассчитаны с учетом
-                по теплым полам: устройство теплоизоляции, прокладка электрических кабелей, устройство покрытий цементных (бетонных), установка терморегуляторов;
-                по роллетам оконным (дверным): установка роллет алюминиевых и механических приводов.
-            </Typography>
-          </Box>
-        )}
-      </DialogContent>
-      {activeTab === 0 && (
-        <DialogActions>
-          <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
-          <Button onClick={handleAddToEstimation} color="primary">
-            ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ
-          </Button>
-        </DialogActions>
-    )}
+            </Box>
+          )}
+          {activeTab === 1 && (
+            <Box>
+              {renderCommonAdjustments()}
+              <Typography variant="body1" paragraph>
+                <strong>Сумма надбавок:</strong> {totalCommonAdjustments?.totalValue || 0} руб.
+              </Typography>
+              <Typography variant='body1'> Примечание. Общие надбавки к оценочной стоимости строения рассчитаны с учетом
+                  по теплым полам: устройство теплоизоляции, прокладка электрических кабелей, устройство покрытий цементных (бетонных), установка терморегуляторов;
+                  по роллетам оконным (дверным): установка роллет алюминиевых и механических приводов.
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        {activeTab === 0 && (
+          <DialogActions>
+            <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
+            <Button onClick={handleAddToEstimation} color="primary">
+              ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ
+            </Button>
+          </DialogActions>
+      )}  
+      </ErrorBoundary>
+      
     </Dialog>
   );
 };

@@ -5,6 +5,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BuildingTypeSearchForm from './components/buildingTypeSearchForm/BuildingTypeSearchForm';
 import InsuranceAssessmentSheet from './components/insuranceAssessmentSheet/InsuranceAssessmentSheet';
+import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 
 function App() {
   const [buildingTypes, setBuildingTypes] = useState([]);
@@ -33,54 +34,59 @@ function App() {
   };
 
   return (
-    <Container maxWidth="xl">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom align="center">
-          Оценка строений
-        </Typography>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={7}>
-            <Paper elevation={3} sx={{ height: '500px', p: 2 }}>
-              <BuildingTypeSearchForm setBuildingTypes={setBuildingTypes} />
-            </Paper>
+    <ErrorBoundary>
+      <Container maxWidth="xl">
+        <Box my={4}>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
+            Оценка строений
+          </Typography>
+          <Grid container spacing={3} justifyContent="center">
+            <Grid item xs={12} md={7}>
+              <Paper elevation={3} sx={{ height: '500px', p: 2 }}>
+                <BuildingTypeSearchForm setBuildingTypes={setBuildingTypes} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <Paper 
+                elevation={3} 
+                sx={{ 
+                  height: '500px', 
+                  p: 2, 
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.02)',
+                  },
+                }}
+              >
+                {estimationList.length > 0 && (
+                  <ErrorBoundary>
+                    <InsuranceAssessmentSheet 
+                      data={estimationList}
+                      isExpanded={isSheetExpanded}
+                      onClose={handleSheetClose}
+                      onExpand={handleSheetExpand}
+                      onDeleteBuilding={handleDeleteBuilding}
+                    />  
+                  </ErrorBoundary>
+                )}
+              </Paper>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={5}>
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                height: '500px', 
-                p: 2, 
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                },
-              }}
-            >
-              {estimationList.length > 0 && (
-                <InsuranceAssessmentSheet 
-                  data={estimationList}
-                  isExpanded={isSheetExpanded}
-                  onClose={handleSheetClose}
-                  onExpand={handleSheetExpand}
-                  onDeleteBuilding={handleDeleteBuilding}
-                />
-              )}
+          <Box mt={3}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <BuildingTypeList 
+                buildingTypes={buildingTypes}
+                setBuildingTypes={setBuildingTypes} 
+                onSelectBuildingType={onSelectBuildingType}
+                onAddToEstimation={onAddToEstimation}
+              />
             </Paper>
-          </Grid>
-        </Grid>
-        <Box mt={3}>
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <BuildingTypeList 
-              buildingTypes={buildingTypes}
-              setBuildingTypes={setBuildingTypes} 
-              onSelectBuildingType={onSelectBuildingType}
-              onAddToEstimation={onAddToEstimation}
-            />
-          </Paper>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </ErrorBoundary>
+    
   );
 }
 
