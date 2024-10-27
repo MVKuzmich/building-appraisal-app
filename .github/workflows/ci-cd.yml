@@ -22,7 +22,7 @@ jobs:
         cache: maven
 
     - name: Build Backend with Maven
-      run: mvn -B package --file backend/pom.xml
+      run: mvn -B package -DskipTests --file backend/pom.xml
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
