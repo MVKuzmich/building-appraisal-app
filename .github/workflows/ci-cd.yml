@@ -75,8 +75,13 @@ jobs:
         port: 22
         debug: true
         script: |
-          echo "Testing connection"
+          echo "Starting deployment..."
+          # Создаем директорию, если её нет
+          sudo mkdir -p /root/building-appraisal-app
+          # Переходим в директорию
+          cd /root/building-appraisal-app
+          # Проверяем, где мы находимся
           pwd
-          cd /building-appraisal-app
+          # Подтягиваем новые образы и запускаем
           docker compose pull
           docker compose up -d
