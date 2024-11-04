@@ -20,7 +20,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /root/building-appraisal-app/frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /root/building-appraisal-app/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - /root/building-appraisal-app/frontend/build:/usr/share/nginx/html:ro
 
     depends_on:
