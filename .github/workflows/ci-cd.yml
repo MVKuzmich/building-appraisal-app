@@ -47,20 +47,15 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push Backend Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./backend/Dockerfile
-        push: true
-        tags: ${{ env.DOCKER_BACKEND_IMAGE }}:latest
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-backend:latest ./backend
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-backend:latest
 
     - name: Build and push Frontend Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./frontend
-        file: ./frontend/Dockerfile
-        push: true
-        tags: ${{ env.DOCKER_FRONTEND_IMAGE }}:latest
+      run: |
+        # Изменяем контекст сборки на корневую директорию
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-frontend:latest -f frontend/Dockerfile .
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-frontend:latest
 
   deploy:
     needs: build-and-push
