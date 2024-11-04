@@ -48,7 +48,7 @@ jobs:
 
     - name: Build and push Backend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-backend:latest ./backend
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-backend:latest -f backend/Dockerfile .
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-backend:latest
 
     - name: Build and push Frontend Docker image
