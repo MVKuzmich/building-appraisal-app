@@ -33,8 +33,6 @@ jobs:
 
     - name: Build Frontend
       working-directory: ./frontend
-      env:
-        REACT_APP_API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
       run: |
         npm ci
         CI=false npm run build
@@ -55,8 +53,10 @@ jobs:
 
     - name: Build and push Frontend Docker image
       run: |
-        # Изменяем контекст сборки на корневую директорию
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-frontend:latest -f frontend/Dockerfile .
+        docker build \
+          --build-arg REACT_APP_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-frontend:latest \
+          -f frontend/Dockerfile .    
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-frontend:latest
 
   deploy:
