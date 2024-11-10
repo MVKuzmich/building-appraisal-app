@@ -33,6 +33,8 @@ jobs:
 
     - name: Build Frontend
       working-directory: ./frontend
+      env:
+        REACT_APP_API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
       run: |
         npm ci
         CI=false npm run build
