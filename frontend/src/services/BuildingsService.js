@@ -6,13 +6,13 @@ const BuildingService = () => {
 
     const getBuildingTypes = async (params) => {
         clearError();
-        const res = await request(`${API_BASE_URL}/building-types`, 'GET', null, {'Content-Type': 'application/json'}, params);
+        const res = await request(`${API_BASE_URL}/api/building-types`, 'GET', null, {'Content-Type': 'application/json'}, params);
         return res;
     }
     
     const exportToExcel = async (data) => {
         clearError();
-        const response = await request(`${API_BASE_URL}/export-to-xlsx`, 'POST', 
+        const response = await request(`${API_BASE_URL}/api/export-to-xlsx`, 'POST', 
            data,
             { 'Content-Type': 'application/json' },
             {},
