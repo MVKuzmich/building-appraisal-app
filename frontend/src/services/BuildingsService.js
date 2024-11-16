@@ -1,7 +1,13 @@
 import { useHttp } from "../hooks/http.hook";
 
 const BuildingService = () => {
+    console.log('BUILD_VERSION:', Date.now()); // Для проверки что код обновился
     const {request, loading, error, clearError} = useHttp();
+
+    // Добавляем отладочную информацию
+    console.log('Environment variables:', process.env);
+    console.log('API_BASE_URL:', process.env.REACT_APP_API_BASE_URL);
+
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
     const getBuildingTypes = async (params) => {
