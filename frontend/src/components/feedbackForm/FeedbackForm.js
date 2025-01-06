@@ -35,11 +35,13 @@ const FeedbackForm = ({ open, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const feedbackData = {
+      ...formData,
+      date: new Date().toISOString()
+    };
+    console.log('Sending feedback data:', feedbackData);
     try {
-      await sendFeedback({
-        ...formData,
-        date: new Date().toISOString()
-      });
+      await sendFeedback(feedbackData);
       
       setSnackbar({
         open: true,
@@ -50,6 +52,7 @@ const FeedbackForm = ({ open, onClose }) => {
       setFormData({ message: '', email: '' });
       onClose();
     } catch (error) {
+      console.error('Error details:', error);
       setSnackbar({
         open: true,
         message: 'Произошла ошибка при отправке сообщения',

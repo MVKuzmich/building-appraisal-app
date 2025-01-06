@@ -86,5 +86,10 @@ jobs:
         port: 22
         script: |
           cd /root/building-appraisal-app
+          echo "Checking environment variables..."
+          echo "MAIL_USERNAME is ${MAIL_USERNAME:+set}"
+          echo "MAIL_PASSWORD is ${MAIL_PASSWORD:+set}"
+          echo "DEVELOPER_EMAIL is ${DEVELOPER_EMAIL:+set}"
           docker compose -f docker-compose.prod.yml pull
           docker compose -f docker-compose.prod.yml up -d
+        envs: MAIL_USERNAME,MAIL_PASSWORD,DEVELOPER_EMAIL

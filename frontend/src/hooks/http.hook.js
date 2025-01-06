@@ -34,7 +34,12 @@ export const useHttp = () => {
             const response = await fetch(requestUrl, options);
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                console.error('Response error:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: await response.json()
+                });
+                throw new Error('Что-то пошло не так');
             }
 
             let data;
@@ -48,7 +53,8 @@ export const useHttp = () => {
 
             setLoading(false);
             return data;
-        } catch(e) {
+        } catch (e) {
+            console.error('Request error:', e);
             setLoading(false);
             setError(e.message);
             throw e;
