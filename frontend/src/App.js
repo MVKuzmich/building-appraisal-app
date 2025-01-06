@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { Container, Typography, Box, Grid, Paper } from '@mui/material';
+import { Container, Typography, Box, Grid, Paper, Fab } from '@mui/material';
 import BuildingTypeList from './components/buildingTypeList/BuildingTypeList';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BuildingTypeSearchForm from './components/buildingTypeSearchForm/BuildingTypeSearchForm';
 import InsuranceAssessmentSheet from './components/insuranceAssessmentSheet/InsuranceAssessmentSheet';
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
+import FeedbackForm from './components/feedbackForm/FeedbackForm';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 
 function App() {
   const [buildingTypes, setBuildingTypes] = useState([]);
   const [selectedBuildingType, setSelectedBuildingType] = useState(null);
   const [estimationList, setEstimationList] = useState([]);
   const [isSheetExpanded, setIsSheetExpanded] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const onSelectBuildingType = (buildingType) => {
     setSelectedBuildingType(buildingType);
@@ -82,6 +85,23 @@ function App() {
             </Paper>
           </Box>
         </Box>
+        <Fab
+          color="primary"
+          aria-label="feedback"
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+          }}
+          onClick={() => setFeedbackOpen(true)}
+        >
+          <FeedbackIcon />
+        </Fab>
+
+        <FeedbackForm 
+          open={feedbackOpen}
+          onClose={() => setFeedbackOpen(false)}
+        />
       </Container>
     </ErrorBoundary>
     
