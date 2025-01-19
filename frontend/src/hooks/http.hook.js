@@ -1,3 +1,4 @@
+// http.hook.js
 import { useState, useCallback } from "react";
 
 export const useHttp = () => {
@@ -24,11 +25,16 @@ export const useHttp = () => {
 
             const options = {
                 method,
-                headers
+                headers: { ...headers }
             };
 
             if (body && method !== 'GET') {
-                options.body = JSON.stringify(body);
+                if (body instanceof FormData) {
+                    delete options.headers['Content-Type'];
+                    options.body = body;
+                } else {
+                    options.body = JSON.stringify(body);
+                }
             }
 
             const response = await fetch(requestUrl, options);
@@ -37,7 +43,6 @@ export const useHttp = () => {
                 console.error('Response error:', {
                     status: response.status,
                     statusText: response.statusText,
-                    data: await response.json()
                 });
                 throw new Error('Что-то пошло не так');
             }
@@ -64,4 +69,4 @@ export const useHttp = () => {
     const clearError = useCallback(() => setError(null), []);
 
     return {loading, request, error, clearError};
-}
+};

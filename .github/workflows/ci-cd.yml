@@ -80,16 +80,24 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
-        envs: MAIL_USERNAME,MAIL_PASSWORD,DEVELOPER_EMAIL
+        envs: MAIL_USERNAME,MAIL_PASSWORD,DEVELOPER_EMAIL,FILE_UPLOAD_DIR
         script: |
           export MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
           export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
           export DEVELOPER_EMAIL=${{ secrets.DEVELOPER_EMAIL }}
+          export FILE_UPLOAD_DIR=${{ secrets.FILE_UPLOAD_DIR }}
+          
+          # Создаем директорию для файлов фидбека
+          mkdir -p ${FILE_UPLOAD_DIR}
+          # Устанавливаем права доступа (чтобы контейнер мог писать в директорию)
+          chmod 755 ${FILE_UPLOAD_DIR}
+          
           cd /root/building-appraisal-app
           echo "Checking environment variables..."
           echo "MAIL_USERNAME is ${MAIL_USERNAME:+set}"
           echo "MAIL_PASSWORD is ${MAIL_PASSWORD:+set}"
           echo "DEVELOPER_EMAIL is ${DEVELOPER_EMAIL:+set}"
+          echo "FILE_UPLOAD_DIR is ${FILE_UPLOAD_DIR:+set}"
           
           # Остановка и удаление старых контейнеров (кроме MongoDB)
           echo "Stopping and removing old containers..."
