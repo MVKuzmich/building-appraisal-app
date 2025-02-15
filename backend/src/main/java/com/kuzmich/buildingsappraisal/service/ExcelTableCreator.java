@@ -264,7 +264,9 @@ public class ExcelTableCreator {
     }
     
     private int getAdjustmentColumnCount(List<EstimationSheetDto> data) {
-        return getAdjustmentGroupCounts(data).values().stream().mapToInt(Integer::intValue).sum();
+        int count = getAdjustmentGroupCounts(data).values().stream().mapToInt(Integer::intValue).sum();
+        // Если надбавок нет, возвращаем 1, чтобы зарезервировать столбец для графы "Надбавки".
+        return count == 0 ? 1 : count;
     }
     
     private void addGroupHeader(Worksheet worksheet, Style headerStyle, Style subHeaderStyle, String groupName, int startCol, String[] subHeaders) {
