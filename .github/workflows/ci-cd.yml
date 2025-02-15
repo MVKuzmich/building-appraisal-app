@@ -5,114 +5,85 @@ on:
     branches: [ "main" ]
 
 env:
-  DOCKER_BACKEND_IMAGE: mikhailkuzmich/building-appraisal-app-backend
-  DOCKER_FRONTEND_IMAGE: mikhailkuzmich/building-appraisal-app-frontend
+  DOCKER_BACKEND_IMAGE: yourdockerhubusername/building-appraisal-app-backend
+  DOCKER_FRONTEND_IMAGE: yourdockerhubusername/building-appraisal-app-frontend
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Build Backend with Maven
-      run: mvn -B package -DskipTests --file backend/pom.xml
+      - name: Build Backend with Maven
+        run: mvn -B package -DskipTests --file backend/pom.xml
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
-    - name: Build Frontend
-      working-directory: ./frontend
-      run: |
-        npm ci
-        CI=false npm run build
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm ci
+          CI=false npm run build
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push Backend Docker image
-      run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-backend:latest -f backend/Dockerfile .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-backend:latest
+      - name: Build and push Backend Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-backend:latest -f backend/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-backend:latest
 
-    - name: Build and push Frontend Docker image
-      run: |
-        docker build \
-          --build-arg REACT_APP_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }} \
+      - name: Build and push Frontend Docker image
+        run: |
+          docker build --build-arg REACT_APP_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }} \
           -t ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-frontend:latest \
-          -f frontend/Dockerfile .    
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-frontend:latest
+          -f frontend/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/building-appraisal-app-frontend:latest
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Copy docker-compose.prod.yml to server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        source: "docker-compose.prod.yml, nginx.conf"
-        target: "/root/building-appraisal-app"
-        
-    - name: Deploy to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: 22
-        envs: MAIL_USERNAME,MAIL_PASSWORD,DEVELOPER_EMAIL,FILE_UPLOAD_DIR
-        script: |
-          export MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
-          export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
-          export DEVELOPER_EMAIL=${{ secrets.DEVELOPER_EMAIL }}
-          export FILE_UPLOAD_DIR=${{ secrets.FILE_UPLOAD_DIR }}
-          
-          # Создаем директорию для файлов фидбека
-          mkdir -p ${FILE_UPLOAD_DIR}
-          # Устанавливаем права доступа (чтобы контейнер мог писать в директорию)
-          chmod 755 ${FILE_UPLOAD_DIR}
-          
-          cd /root/building-appraisal-app
-          echo "Checking environment variables..."
-          echo "MAIL_USERNAME is ${MAIL_USERNAME:+set}"
-          echo "MAIL_PASSWORD is ${MAIL_PASSWORD:+set}"
-          echo "DEVELOPER_EMAIL is ${DEVELOPER_EMAIL:+set}"
-          echo "FILE_UPLOAD_DIR is ${FILE_UPLOAD_DIR:+set}"
-          
-          # Остановка и удаление старых контейнеров (кроме MongoDB)
-          echo "Stopping and removing old containers..."
-          docker stop $(docker ps -a | grep 'building-appraisal-app' | grep -v 'mongodb' | awk '{print $1}') 2>/dev/null || true
-          docker rm $(docker ps -a | grep 'building-appraisal-app' | grep -v 'mongodb' | awk '{print $1}') 2>/dev/null || true
-          
-          # Удаление старых образов (кроме MongoDB)
-          echo "Removing old images..."
-          docker rmi $(docker images | grep 'building-appraisal-app' | grep -v 'mongodb' | awk '{print $3}') 2>/dev/null || true
-          
-          # Очистка неиспользуемых образов и томов
-          echo "Cleaning up unused images and volumes..."
-          docker image prune -f
-          docker volume prune -f
-          
-          # Загрузка и запуск новых контейнеров
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d
+      - uses: actions/checkout@v3
+
+      - name: Copy docker-compose.prod.yml and nginx.conf to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "docker-compose.prod.yml, nginx.conf"
+          target: "/root/building-appraisal-app"
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            # Перейти в директорию развертывания
+            cd /root/building-appraisal-app
+            docker-compose -f docker-compose.prod.yml down --remove-orphans
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker image prune -f

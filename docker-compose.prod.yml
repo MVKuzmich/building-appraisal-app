@@ -1,6 +1,6 @@
 services:
   backend:
-    image: mikhailkuzmich/building-appraisal-app-backend:latest
+    image: ${DOCKERHUB_USERNAME}/building-appraisal-app-backend:latest
     ports:
       - "8080:8080"
     networks:
@@ -10,14 +10,14 @@ services:
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
       - SPRING_MAIL_DEVELOPER=${DEVELOPER_EMAIL}
-      - FILE_UPLOAD_DIR=/app/uploads
+      - FILE_UPLOAD_DIR=${FILE_UPLOAD_DIR}
     volumes:
-      - ${FILE_UPLOAD_DIR}:/app/uploads
+      - ${FILE_UPLOAD_DIR}:${FILE_UPLOAD_DIR}
     depends_on:
       - mongodb
 
   frontend:
-    image: mikhailkuzmich/building-appraisal-app-frontend:latest
+    image: ${DOCKERHUB_USERNAME}/building-appraisal-app-frontend:latest
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
