@@ -710,7 +710,6 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
                   type="number"
                   value={basedCostWithAdjustments}
                   margin="normal"
-
                 />
               </Grid>
               <Grid item xs={3}>

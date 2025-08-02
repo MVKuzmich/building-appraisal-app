@@ -18,11 +18,13 @@ WORKDIR /app
 # Копирование зависимостей из предыдущего слоя
 COPY --from=deps /app/node_modules ./node_modules
 
-# Копирование исходного кода
-COPY frontend/ ./
+# Копирование только необходимых файлов для сборки
+COPY frontend/package*.json ./
+COPY frontend/public ./public
+COPY frontend/src ./src
 
 # Установка dev зависимостей для сборки
-RUN npm ci
+RUN npm ci --only=dev
 
 # Переменные окружения для сборки
 ARG REACT_APP_API_BASE_URL

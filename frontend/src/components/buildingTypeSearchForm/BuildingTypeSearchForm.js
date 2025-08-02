@@ -22,7 +22,6 @@ const BuildingTypeSearchForm = ({setBuildingTypes}) => {
               getBuildingTypes(values).then((res) => {
                 setBuildingTypes(res);
                 resetForm();
-
               }).catch(err => {
                 console.error("Error fetching building types:", err);
               });
