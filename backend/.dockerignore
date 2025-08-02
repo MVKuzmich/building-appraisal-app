@@ -1,0 +1,22 @@
+# Исключение ненужных файлов для ускорения сборки backend
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~ 

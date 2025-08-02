@@ -3,6 +3,8 @@ services:
     build: 
       context: .
       dockerfile: backend/Dockerfile
+      cache_from:
+        - maven:3-openjdk-17
     ports:
       - "8080:8080"
     networks:
@@ -15,8 +17,14 @@ services:
       - FILE_UPLOAD_DIR=/app/uploads
     volumes:
       - /home/mikhail/appdata/buildingappraisal/feedback:/app/uploads
+      # Режим разработки - раскомментировать для hot reload
+      # - ./backend/src:/app/backend/src
+      # - maven_cache:/root/.m2
     depends_on:
       - mongodb
+    restart: unless-stopped
+    # Для разработки раскомментировать:
+    # command: ["mvn", "spring-boot:run", "-f", "backend/pom.xml"]
 
   frontend:
     build:
@@ -24,12 +32,23 @@ services:
       dockerfile: frontend/Dockerfile
       args:
         - REACT_APP_API_BASE_URL=http://localhost
+      cache_from:
+        - node:18-alpine
     ports:
-      - "80:80"  # Добавили порты здесь
+      - "80:80"
     networks:
       - app-network
     depends_on:
       - backend
+    restart: unless-stopped
+    # Для разработки раскомментировать:
+    # volumes:
+    #   - ./frontend/src:/app/src
+    #   - ./frontend/public:/app/public
+    #   - npm_cache:/app/node_modules
+    # environment:
+    #   - CHOKIDAR_USEPOLLING=true
+    #   - WATCHPACK_POLLING=true
 
   mongodb:
     image: mongo:5.0
@@ -42,6 +61,7 @@ services:
       - mongodb_data:/data/db
     networks:
       - app-network
+    restart: unless-stopped
 
 networks:
   app-network:
@@ -49,3 +69,6 @@ networks:
 
 volumes:
   mongodb_data:
+  # Раскомментировать для разработки:
+  # maven_cache:
+  # npm_cache:
