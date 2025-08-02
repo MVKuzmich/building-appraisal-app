@@ -698,7 +698,8 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
               fullWidth
               label="Сумма общих надбавок"
               type="number"
-              value={totalCommonAdjustments.totalValue}
+              value={totalCommonAdjustments.totalValue || ''}
+              placeholder={totalCommonAdjustments.totalValue ? "" : "Введите сумму"}
               margin="normal"
             />
             <Grid container spacing={2}>
