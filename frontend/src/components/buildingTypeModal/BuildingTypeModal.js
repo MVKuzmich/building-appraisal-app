@@ -16,14 +16,12 @@ import {
   MenuItem,
   InputLabel,
   Box,
-  Tabs,
-  Tab,
   Grid,
   Checkbox
 } from '@mui/material';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
-const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, setBuildingTypes }) => {
+const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, setBuildingTypes, editData = null }) => {
   const [selectedBasedCost, setSelectedBasedCost] = useState(0);
   const [selectedAdjustments, setSelectedAdjustments] = useState([]);
   const [wearRate, setWearRate] = useState(0);
@@ -38,9 +36,10 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
   const [adjustmentQuantities, setAdjustmentQuantities] = useState({});
   const [totalCommonAdjustments, setTotalCommonAdjustments] = useState({});
 
-  const [activeTab, setActiveTab] = useState(0);
-
   const inputRefs = useRef({});
+
+  // Определяем, находимся ли мы в режиме редактирования
+  const isEditMode = editData !== null;
 
   const commonAdjustmentsData = [
     { element: 'Устройство теплых полов с теплоизоляцией', cost: 28.4, unit: '1 кв.м пола' },
@@ -67,10 +66,57 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
   }, [open]);
 
   useEffect(() => {
+    console.log('BuildingTypeModal useEffect - open:', open);
+    console.log('BuildingTypeModal useEffect - isEditMode:', isEditMode);
+    console.log('BuildingTypeModal useEffect - editData:', editData);
+    console.log('BuildingTypeModal useEffect - buildingType:', buildingType);
+    
     if (open) {
-      resetForm();
+      if (isEditMode && editData) {
+        console.log('BuildingTypeModal - загружаем данные для редактирования');
+        console.log('editData.selectedBasedCost:', editData.selectedBasedCost);
+        console.log('editData.selectedAdjustments:', editData.selectedAdjustments);
+        
+        // Загружаем данные для редактирования
+        setSelectedBasedCost(editData.selectedBasedCost || 0);
+        setSelectedAdjustments(editData.selectedAdjustments || []);
+        setWearRate(editData.wearRate || 0);
+        setBuildingYear(editData.buildingYear || 0);
+        setBuildingDimensions(editData.dimensions || {
+          length: 0,
+          width: 0,
+          height: 0,
+          cubic: 0,
+          area: 0
+        });
+        setAdjustmentQuantities(editData.adjustmentQuantities || {});
+        setTotalCommonAdjustments(editData.totalCommonAdjustments || {});
+      } else {
+        console.log('BuildingTypeModal - сбрасываем форму');
+        resetForm();
+      }
     }
-  }, [open, buildingType]);
+  }, [open, buildingType, isEditMode, editData]);
+
+  // Дополнительный useEffect для обработки изменения editData
+  useEffect(() => {
+    if (isEditMode && editData && open) {
+      // Обновляем данные при изменении editData
+      setSelectedBasedCost(editData.selectedBasedCost || 0);
+      setSelectedAdjustments(editData.selectedAdjustments || []);
+      setWearRate(editData.wearRate || 0);
+      setBuildingYear(editData.buildingYear || 0);
+      setBuildingDimensions(editData.dimensions || {
+        length: 0,
+        width: 0,
+        height: 0,
+        cubic: 0,
+        area: 0
+      });
+      setAdjustmentQuantities(editData.adjustmentQuantities || {});
+      setTotalCommonAdjustments(editData.totalCommonAdjustments || {});
+    }
+  }, [editData, isEditMode, open]);
   
   
   const getBasedCostWithAdjustments = useCallback(() => {
@@ -162,13 +208,23 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
       buildingAppraisal: parseFloat(buildingAppraisal.toFixed(2)),
       wearRate,
       buildingAppraisalWithWear: parseFloat(buildingAppraisalWithWear.toFixed(2)),
-      insuredValue
+      insuredValue,
+      // Добавляем данные для возможности повторного редактирования
+      adjustmentQuantities
     };
-    onAddToEstimation(estimationData);
+    
+    if (isEditMode) {
+      // В режиме редактирования передаем индекс объекта для обновления
+      onAddToEstimation(estimationData, editData.orderedNumber);
+    } else {
+      // В режиме добавления просто добавляем новый объект
+      onAddToEstimation(estimationData);
+    }
+    
     handleClose();
     setBuildingTypes([]);
 
-  }, [buildingType.estimationSheetData.name, buildingType.estimationSheetData.foundation, buildingType.estimationSheetData.walls, buildingType.estimationSheetData.roof, buildingType.type, buildingYear, buildingDimensions, selectedBasedCost, selectedAdjustments, totalCommonAdjustments, basedCostWithAdjustments, buildingAppraisal, buildingAppraisalWithWear, onAddToEstimation, handleClose]);
+  }, [buildingType.estimationSheetData.name, buildingType.estimationSheetData.foundation, buildingType.estimationSheetData.walls, buildingType.estimationSheetData.roof, buildingType.type, buildingYear, buildingDimensions, selectedBasedCost, selectedAdjustments, totalCommonAdjustments, basedCostWithAdjustments, buildingAppraisal, buildingAppraisalWithWear, onAddToEstimation, handleClose, isEditMode, editData, adjustmentQuantities]);
 
   const handleDimensionChange = useCallback((dimension, value) => {
     const numValue = parseFloat(value) || 0;
@@ -225,27 +281,130 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
 
   const renderAdjustments = useCallback(() => {
     if(open) {
-      console.log(`render adjustments ${buildingType.adjustments}`)
+      console.log(`render adjustments - buildingType.adjustments:`, buildingType.adjustments);
+      console.log(`render adjustments - selectedAdjustments:`, selectedAdjustments);
+      console.log(`render adjustments - buildingType:`, buildingType);
+      
       return (
         <FormControl fullWidth margin="normal">
-          <InputLabel>Надбавки</InputLabel>
-          {(buildingType.adjustments && buildingType.adjustments.length > 0) ? (<Select
-            multiple
-            value={selectedAdjustments}
-            onChange={(e) => setSelectedAdjustments(e.target.value)}
-            renderValue={(selected) => selected.map(adj => adj.adjustmentElement[0]).join(', ')}
-          >
-            {buildingType.adjustments.map((adjustment, index) => (
-              <MenuItem key={index} value={adjustment}>
-                {adjustment.adjustmentElement[0]}: {adjustment.adjustmentCost} руб.
-              </MenuItem>
-            ))}
-          </Select>
+          <FormLabel component="legend" style={{ marginBottom: '12px', fontWeight: 'bold' }}>
+            Надбавки и скидки
+          </FormLabel>
+          {(buildingType.adjustments && buildingType.adjustments.length > 0) ? (
+            <div style={{ 
+              maxHeight: '250px', 
+              overflowY: 'auto', 
+              border: '1px solid #e0e0e0', 
+              padding: '16px', 
+              borderRadius: '8px',
+              backgroundColor: '#fafafa'
+            }}>
+              {buildingType.adjustments.map((adjustment, index) => {
+                const isSelected = selectedAdjustments.some(selected => 
+                  selected.adjustmentElement[0] === adjustment.adjustmentElement[0] &&
+                  selected.adjustmentCost === adjustment.adjustmentCost
+                );
+                
+                return (
+                  <FormControlLabel
+                    key={index}
+                    control={
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            // Добавляем надбавку
+                            setSelectedAdjustments(prev => [...prev, adjustment]);
+                          } else {
+                            // Удаляем надбавку
+                            setSelectedAdjustments(prev => 
+                              prev.filter(adj => 
+                                !(adj.adjustmentElement[0] === adjustment.adjustmentElement[0] &&
+                                  adj.adjustmentCost === adjustment.adjustmentCost)
+                              )
+                            );
+                          }
+                        }}
+                        color="primary"
+                        size="medium"
+                      />
+                    }
+                    label={
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        width: '100%',
+                        minHeight: '24px'
+                      }}>
+                        <span style={{ 
+                          flex: 1, 
+                          fontSize: '14px',
+                          lineHeight: '1.4'
+                        }}>
+                          {adjustment.adjustmentElement[0]}
+                        </span>
+                        <span style={{ 
+                          fontWeight: 'bold', 
+                          color: adjustment.adjustmentCost > 0 ? '#2e7d32' : '#d32f2f',
+                          marginLeft: '12px',
+                          fontSize: '14px',
+                          minWidth: '60px',
+                          textAlign: 'right'
+                        }}>
+                          {adjustment.adjustmentCost > 0 ? '+' : ''}{adjustment.adjustmentCost} руб.
+                        </span>
+                      </div>
+                    }
+                    style={{ 
+                      margin: '4px 0',
+                      padding: '6px 10px',
+                      backgroundColor: isSelected ? '#e3f2fd' : 'transparent',
+                      borderRadius: '6px',
+                      border: isSelected ? '1px solid #1976d2' : '1px solid transparent',
+                      transition: 'all 0.2s ease',
+                      width: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                );
+              })}
+            </div>
           ) : (
-          <Select>
-            <MenuItem>Надбавки и скидки не установлены</MenuItem>
-          </Select>
-        )}
+            <Typography variant="body2" color="textSecondary" style={{ fontStyle: 'italic' }}>
+              Надбавки и скидки не установлены для данного типа строения
+            </Typography>
+          )}
+          {selectedAdjustments.length > 0 && (
+            <Box mt={2} p={2} bgcolor="#f8f9fa" borderRadius={2} border="1px solid #e9ecef">
+              <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold', color: '#1976d2' }}>
+                Выбранные надбавки ({selectedAdjustments.length}):
+              </Typography>
+              <div style={{ marginTop: '8px' }}>
+                {selectedAdjustments.map((adj, index) => (
+                  <Typography 
+                    key={index} 
+                    variant="body2" 
+                    color="textSecondary"
+                    style={{ 
+                      margin: '4px 0',
+                      padding: '4px 0',
+                      borderBottom: index < selectedAdjustments.length - 1 ? '1px solid #e0e0e0' : 'none'
+                    }}
+                  >
+                    • {adj.adjustmentElement[0]}: 
+                    <span style={{ 
+                      fontWeight: 'bold',
+                      color: adj.adjustmentCost > 0 ? '#2e7d32' : '#d32f2f',
+                      marginLeft: '8px'
+                    }}>
+                      {adj.adjustmentCost > 0 ? '+' : ''}{adj.adjustmentCost} руб.
+                    </span>
+                  </Typography>
+                ))}
+              </div>
+            </Box>
+          )}
         </FormControl>
       );
     }
@@ -308,44 +467,126 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
 
   const renderCommonAdjustments = useCallback(() => {
     return (
-      <div>
-        {commonAdjustmentsData.map((adjustment) => (
-          <div key={adjustment.element} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={adjustmentQuantities.hasOwnProperty(adjustment.element)}
-                  onChange={(e) => handleCheckboxChange(e.target.checked, adjustment)}
-                />
-              }
-              label={`${adjustment.element} (${adjustment.unit})`}
-            />
-            {adjustmentQuantities.hasOwnProperty(adjustment.element) && (
-              <>
-                <TextField
-                  type="number"
-                  value={adjustmentQuantities[adjustment.element] || ''}
-                  onChange={(e) => handleInputChange(e, adjustment)}
-                  style={{ marginLeft: '10px', width: '80px' }}
-                  placeholder="Количество"
-                />
-                <TextField
-                  disabled
-                  type="number"
-                  value={adjustment.cost}
-                  style={{ marginLeft: '10px', width: '80px' }}
-
-                />
-                <TextField
-                  type="number"
-                  value={(adjustmentQuantities[adjustment.element] * adjustment.cost).toFixed(2)}
-                  style={{ marginLeft: '10px', width: '80px' }}
-                />
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+      <FormControl fullWidth margin="normal">
+        <FormLabel component="legend" style={{ marginBottom: '12px', fontWeight: 'bold' }}>
+          Общие надбавки
+        </FormLabel>
+        <div style={{ 
+          maxHeight: '200px', 
+          overflowY: 'auto', 
+          border: '1px solid #e0e0e0', 
+          padding: '16px', 
+          borderRadius: '8px',
+          backgroundColor: '#fafafa'
+        }}>
+          {commonAdjustmentsData.map((adjustment) => (
+            <div key={adjustment.element} style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              marginBottom: '8px',
+              padding: '6px 10px',
+              borderRadius: '6px',
+              backgroundColor: adjustmentQuantities.hasOwnProperty(adjustment.element) ? '#e3f2fd' : 'transparent',
+              border: adjustmentQuantities.hasOwnProperty(adjustment.element) ? '1px solid #1976d2' : '1px solid transparent',
+              transition: 'all 0.2s ease'
+            }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={adjustmentQuantities.hasOwnProperty(adjustment.element)}
+                    onChange={(e) => handleCheckboxChange(e.target.checked, adjustment)}
+                    color="primary"
+                    size="medium"
+                  />
+                }
+                label={
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    width: '100%',
+                    minHeight: '24px'
+                  }}>
+                    <span style={{ 
+                      flex: 1, 
+                      fontSize: '14px',
+                      lineHeight: '1.4'
+                    }}>
+                      {adjustment.element} ({adjustment.unit})
+                    </span>
+                    <span style={{ 
+                      fontWeight: 'bold', 
+                      color: '#1976d2',
+                      marginLeft: '12px',
+                      fontSize: '14px',
+                      minWidth: '60px',
+                      textAlign: 'right'
+                    }}>
+                      {adjustment.cost} руб.
+                    </span>
+                  </div>
+                }
+                style={{ margin: 0, flex: 1 }}
+              />
+              {adjustmentQuantities.hasOwnProperty(adjustment.element) && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <TextField
+                    type="number"
+                    value={adjustmentQuantities[adjustment.element] || ''}
+                    onChange={(e) => handleInputChange(e, adjustment)}
+                    style={{ width: '80px' }}
+                    placeholder="Кол-во"
+                    size="small"
+                  />
+                  <TextField
+                    disabled
+                    type="number"
+                    value={adjustment.cost}
+                    style={{ width: '80px' }}
+                    size="small"
+                  />
+                  <TextField
+                    type="number"
+                    value={(adjustmentQuantities[adjustment.element] * adjustment.cost).toFixed(2)}
+                    style={{ width: '100px' }}
+                    size="small"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        {Object.keys(adjustmentQuantities).length > 0 && (
+          <Box mt={2} p={2} bgcolor="#f8f9fa" borderRadius={2} border="1px solid #e9ecef">
+            <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold', color: '#1976d2' }}>
+              Выбранные общие надбавки ({Object.keys(adjustmentQuantities).length}):
+            </Typography>
+            <div style={{ marginTop: '8px' }}>
+              {Object.entries(adjustmentQuantities).map(([element, quantity], index) => {
+                const adjustment = commonAdjustmentsData.find(adj => adj.element === element);
+                const totalCost = quantity * adjustment.cost;
+                return (
+                  <Typography 
+                    key={index} 
+                    variant="body2" 
+                    color="textSecondary"
+                    style={{ 
+                      margin: '4px 0',
+                      padding: '4px 0',
+                      borderBottom: index < Object.keys(adjustmentQuantities).length - 1 ? '1px solid #e0e0e0' : 'none'
+                    }}
+                  >
+                    • {element}: {quantity} × {adjustment.cost} руб. = {totalCost.toFixed(2)} руб.
+                  </Typography>
+                );
+              })}
+            </div>
+          </Box>
+        )}
+      </FormControl>
     );
   }, [adjustmentQuantities, handleCheckboxChange, handleInputChange]);
 
@@ -353,177 +594,162 @@ const BuildingTypeModal = ({ open, onClose, buildingType, onAddToEstimation, set
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <ErrorBoundary>
-        <DialogTitle>{buildingType.type}. {buildingType.name}</DialogTitle>
+        <DialogTitle>
+          {isEditMode ? 'Редактирование: ' : ''}{buildingType.type}. {buildingType.name}
+        </DialogTitle>
         <DialogContent>
-          <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-            <Tab label="Основная информация" />
-            <Tab label="Общие надбавки" />
-          </Tabs>
-          {activeTab === 0 && (
-            <Box>
-              <Typography variant="body1" paragraph>
-                <strong>Описание:</strong> {buildingType.description}
-              </Typography>
-              <Grid container spacing={2} direction="row">
-                <Grid item xs={6}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        label="Год постройки"
-                        value={buildingYear}
-                        onChange={(e) => setBuildingYear(e.target.value)}
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        label="Процент износа"
-                        type="number"
-                        value={wearRate}
-                        onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
-                        margin="normal"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={4}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={4}>
+          <Box>
+            <Typography variant="body1" paragraph>
+              <strong>Описание:</strong> {buildingType.description}
+            </Typography>
+            <Grid container spacing={2} direction="row">
+              <Grid item xs={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
                     <TextField
-                        fullWidth
-                        label="Длина строения"
-                        type="number"
-                        value={buildingDimensions.length || ''}
-                        onChange={(e) => handleDimensionChange('length', e.target.value)}
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <TextField
-                        fullWidth
-                        label="Ширина строения"
-                        type="number"
-                        value={buildingDimensions.width || ''}
-                        onChange={(e) => handleDimensionChange('width', e.target.value)}
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <TextField
-                        fullWidth
-                        label="Высота строения"
-                        type="number"
-                        value={buildingDimensions.height || ''}
-                        onChange={(e) => handleDimensionChange('height', e.target.value)}
-                        margin="normal"
-                      />       
-                    </Grid>
+                      fullWidth
+                      label="Год постройки"
+                      value={buildingYear}
+                      onChange={(e) => setBuildingYear(e.target.value)}
+                      margin="normal"
+                    />
                   </Grid>
-                </Grid>
-                <Grid item xs={6}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                  <Grid item xs={6}>
                     <TextField
-                        fullWidth
-                        label="Объем строения"
-                        type="number"
-                        value={buildingDimensions.cubic || ''}
-                        onChange={(e) => handleDimensionChange('cubic', e.target.value)}
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        label="Площадь строения"
-                        type="number"
-                        value={buildingDimensions.area || ''}
-                        onChange={(e) => handleDimensionChange('area', e.target.value)}
-                        margin="normal"
-                      />
-                    </Grid>
+                      fullWidth
+                      label="Процент износа"
+                      type="number"
+                      value={wearRate}
+                      onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
+                      margin="normal"
+                    />
                   </Grid>
                 </Grid>
               </Grid>
-              <ErrorBoundary>
-                {renderBaseCosts()}
-              </ErrorBoundary>
-              <ErrorBoundary>
-                {renderAdjustments()}  
-              </ErrorBoundary>
-              <TextField
-                fullWidth
-                label="Сумма общих надбавок"
-                type="number"
-                value={totalCommonAdjustments.totalValue}
-                margin="normal"
-              />
-              <Grid container spacing={2}>
-                <Grid item xs={3}>
+              <Grid item xs={4}>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
                   <TextField
-                    fullWidth
-                    label="Норма с учетом отклонений"
-                    type="number"
-                    value={basedCostWithAdjustments}
-                    margin="normal"
-
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    disabled
-                    fullWidth
-                    label="Оценка строения"
-                    value={buildingAppraisal}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    disabled
-                    fullWidth
-                    label="Оценка с учетом износа"
-                    type="number"
-                    value={buildingAppraisalWithWear}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    disabled
-                    fullWidth
-                    label="Страховая сумма"
-                    type="number"
-                    value={insuredValue}
-                    margin="normal"
-                  />
+                      fullWidth
+                      label="Длина строения"
+                      type="number"
+                      value={buildingDimensions.length || ''}
+                      onChange={(e) => handleDimensionChange('length', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      label="Ширина строения"
+                      type="number"
+                      value={buildingDimensions.width || ''}
+                      onChange={(e) => handleDimensionChange('width', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      label="Высота строения"
+                      type="number"
+                      value={buildingDimensions.height || ''}
+                      onChange={(e) => handleDimensionChange('height', e.target.value)}
+                      margin="normal"
+                    />       
+                  </Grid>
                 </Grid>
               </Grid>
-            </Box>
-          )}
-          {activeTab === 1 && (
-            <Box>
+              <Grid item xs={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                  <TextField
+                      fullWidth
+                      label="Объем строения"
+                      type="number"
+                      value={buildingDimensions.cubic || ''}
+                      onChange={(e) => handleDimensionChange('cubic', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Площадь строения"
+                      type="number"
+                      value={buildingDimensions.area || ''}
+                      onChange={(e) => handleDimensionChange('area', e.target.value)}
+                      margin="normal"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <ErrorBoundary>
+              {renderBaseCosts()}
+            </ErrorBoundary>
+            <ErrorBoundary>
+              {renderAdjustments()}  
+            </ErrorBoundary>
+            <ErrorBoundary>
               {renderCommonAdjustments()}
-              <Typography variant="body1" paragraph>
-                <strong>Сумма надбавок:</strong> {totalCommonAdjustments?.totalValue || 0} руб.
-              </Typography>
-              <Typography variant='body1'> Примечание. Общие надбавки к оценочной стоимости строения рассчитаны с учетом
-                  по теплым полам: устройство теплоизоляции, прокладка электрических кабелей, устройство покрытий цементных (бетонных), установка терморегуляторов;
-                  по роллетам оконным (дверным): установка роллет алюминиевых и механических приводов.
-              </Typography>
-            </Box>
-          )}
+            </ErrorBoundary>
+            <TextField
+              fullWidth
+              label="Сумма общих надбавок"
+              type="number"
+              value={totalCommonAdjustments.totalValue}
+              margin="normal"
+            />
+            <Grid container spacing={2}>
+              <Grid item xs={3}>
+                <TextField
+                  fullWidth
+                  label="Норма с учетом отклонений"
+                  type="number"
+                  value={basedCostWithAdjustments}
+                  margin="normal"
+
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  label="Оценка строения"
+                  value={buildingAppraisal}
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  label="Оценка с учетом износа"
+                  type="number"
+                  value={buildingAppraisalWithWear}
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  label="Страховая сумма"
+                  type="number"
+                  value={insuredValue}
+                  margin="normal"
+                />
+              </Grid>
+            </Grid>
+          </Box>
         </DialogContent>
-        {activeTab === 0 && (
-          <DialogActions>
-            <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
-            <Button onClick={handleAddToEstimation} color="primary">
-              ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ
-            </Button>
-          </DialogActions>
-      )}  
+        <DialogActions>
+          <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
+          <Button onClick={handleAddToEstimation} color="primary">
+            {isEditMode ? 'СОХРАНИТЬ ИЗМЕНЕНИЯ' : 'ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ'}
+          </Button>
+        </DialogActions>
       </ErrorBoundary>
       
     </Dialog>

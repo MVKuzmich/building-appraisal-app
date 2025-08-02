@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './insuranceAssessmentSheet.css';
 import { Button, Box, Modal, IconButton, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,7 +14,7 @@ import BuildingService from '../../services/BuildingsService';
 import saveAs from 'file-saver';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
-const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDeleteBuilding }) => {
+const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDeleteBuilding, onEditBuilding }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [buildingToDelete, setBuildingToDelete] = useState(null);
@@ -103,8 +104,9 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDelet
     {
       headerName: '',
       field: 'actions',
-      width: 100,
+      width: 120,
       cellRenderer: (params) => (
+        <>
         <IconButton
           onClick={() => handleDeleteClick(params.data.orderedNumber)}
           size="small"
@@ -113,6 +115,15 @@ const InsuranceAssessmentSheet = ({ data, isExpanded, onClose, onExpand, onDelet
         >
           <DeleteIcon />
         </IconButton>
+          <IconButton
+            onClick={() => onEditBuilding(params.data)}
+            size="small"
+            color="primary"
+            aria-label="edit"
+          >
+            <EditIcon />
+          </IconButton>
+        </>
       ),
     },
     { headerName: '№ п/п', field: 'orderedNumber', headerClass: 'ag-header-cell-center'},

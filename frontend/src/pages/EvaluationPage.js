@@ -15,11 +15,30 @@ const EvaluationPage = () => {
   const [estimationList, setEstimationList] = useState([]);
   const [isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  // Добавляем состояние для редактирования
+  const [editingBuilding, setEditingBuilding] = useState(null);
 
   const onSelectBuildingType = (buildingType) => setSelectedBuildingType(buildingType);
 
-  const onAddToEstimation = (estimationData) =>
-    setEstimationList([...estimationList, estimationData]);
+  // Обновляем функцию добавления для поддержки редактирования
+  const onAddToEstimation = (estimationData, editIndex = null) => {
+    if (editIndex !== null) {
+      // Режим редактирования - обновляем существующий объект
+      setEstimationList((prevList) => {
+        const newList = [...prevList];
+        newList[editIndex - 1] = estimationData; // orderedNumber начинается с 1, но индекс с 0
+        return newList;
+      });
+    } else {
+      // Режим добавления - добавляем новый объект
+      setEstimationList([...estimationList, estimationData]);
+    }
+  };
+
+  // Функция для обработки редактирования объекта
+  const handleEditBuilding = (buildingData) => {
+    setEditingBuilding(buildingData);
+  };
 
   const handleSheetExpand = () => setIsSheetExpanded(true);
 
@@ -64,6 +83,7 @@ const EvaluationPage = () => {
                       onClose={handleSheetClose}
                       onExpand={handleSheetExpand}
                       onDeleteBuilding={handleDeleteBuilding}
+                      onEditBuilding={handleEditBuilding}
                     />
                   </ErrorBoundary>
                 </Paper>
@@ -77,6 +97,8 @@ const EvaluationPage = () => {
                 setBuildingTypes={setBuildingTypes}
                 onSelectBuildingType={onSelectBuildingType}
                 onAddToEstimation={onAddToEstimation}
+                editingBuilding={editingBuilding}
+                setEditingBuilding={setEditingBuilding}
               />
             </Paper>
           </Box>
