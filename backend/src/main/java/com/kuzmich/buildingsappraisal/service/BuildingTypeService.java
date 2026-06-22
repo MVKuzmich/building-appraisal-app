@@ -2,12 +2,8 @@ package com.kuzmich.buildingsappraisal.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
 import com.kuzmich.buildingsappraisal.model.BuildingType;
 
 import lombok.RequiredArgsConstructor;
@@ -16,26 +12,38 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BuildingTypeService {
 
-    private final MongoTemplate mongoTemplate;
+    private final BuildingTypeDataService buildingTypeDataService;
 
     public List<BuildingType> getBuildingTypes(String buildingType, String buildingName) {
-        Query query = new Query();
-        
-        if (buildingType != null && !buildingType.isEmpty()) {
-            query.addCriteria(Criteria.where("type").regex("^" + buildingType + "$", "i"));
+        List<BuildingType> result = new ArrayList<>(buildingTypeDataService.getAll());
+
+        if (buildingType != null && !buildingType.isBlank()) {
+            String normalizedType = buildingType.trim();
+            result = result.stream()
+                    .filter(item -> item.getType().equalsIgnoreCase(normalizedType))
+                    .toList();
         }
 
-        if (buildingName != null && !buildingName.isEmpty()) {
+        if (buildingName != null && !buildingName.isBlank()) {
             String[] userWords = buildingName.toLowerCase().trim().split("\\s+");
-            List<Criteria> wordCriteria = new ArrayList<>();
-            
-            for (String word : userWords) {
-                wordCriteria.add(Criteria.where("name").regex(".*" + Pattern.quote(word) + ".*", "i"));
-            }
-            
-            query.addCriteria(new Criteria().andOperator(wordCriteria.toArray(new Criteria[0])));
+            result = result.stream()
+                    .filter(item -> {
+                        String name = item.getName().toLowerCase();
+                        for (String word : userWords) {
+                            if (!name.contains(word)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    })
+                    .toList();
         }
-        
-        return mongoTemplate.find(query, BuildingType.class);
+
+        return result;
+    }
+
+    public BuildingType getBuildingTypeById(String type) {
+        return buildingTypeDataService.findByType(type)
+                .orElseThrow(() -> new IllegalArgumentException("Building type not found: " + type));
     }
 }

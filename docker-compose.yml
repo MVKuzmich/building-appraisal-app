@@ -10,21 +10,13 @@ services:
     networks:
       - app-network
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://zero:one@mongodb:27017/buildings?authSource=admin
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
       - SPRING_MAIL_DEVELOPER=${DEVELOPER_EMAIL}
       - FILE_UPLOAD_DIR=/app/uploads
     volumes:
       - /home/mikhail/appdata/buildingappraisal/feedback:/app/uploads
-      # Режим разработки - раскомментировать для hot reload
-      # - ./backend/src:/app/backend/src
-      # - maven_cache:/root/.m2
-    depends_on:
-      - mongodb
     restart: unless-stopped
-    # Для разработки раскомментировать:
-    # command: ["mvn", "spring-boot:run", "-f", "backend/pom.xml"]
 
   frontend:
     build:
@@ -41,34 +33,7 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-    # Для разработки раскомментировать:
-    # volumes:
-    #   - ./frontend/src:/app/src
-    #   - ./frontend/public:/app/public
-    #   - npm_cache:/app/node_modules
-    # environment:
-    #   - CHOKIDAR_USEPOLLING=true
-    #   - WATCHPACK_POLLING=true
-
-  mongodb:
-    image: mongo:5.0
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=zero
-      - MONGO_INITDB_ROOT_PASSWORD=one
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - app-network
-    restart: unless-stopped
 
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  mongodb_data:
-  # Раскомментировать для разработки:
-  # maven_cache:
-  # npm_cache:
