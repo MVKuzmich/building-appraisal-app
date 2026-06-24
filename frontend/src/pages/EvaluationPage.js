@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Typography, Box, Grid, Paper, Fab } from '@mui/material';
 import BuildingTypeList from '../components/buildingTypeList/BuildingTypeList';
 import '../App.css';
@@ -8,46 +8,45 @@ import InsuranceAssessmentSheet from '../components/insuranceAssessmentSheet/Ins
 import ErrorBoundary from '../components/errorBoundary/ErrorBoundary';
 import FeedbackForm from '../components/feedbackForm/FeedbackForm';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import BuildingService from '../services/BuildingsService';
+import { DEFAULT_COMMON_ADJUSTMENTS } from '../data/commonAdjustments';
 
 const EvaluationPage = () => {
   const [buildingTypes, setBuildingTypes] = useState([]);
-  const [selectedBuildingType, setSelectedBuildingType] = useState(null);
   const [estimationList, setEstimationList] = useState([]);
   const [isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  // Добавляем состояние для редактирования
   const [editingBuilding, setEditingBuilding] = useState(null);
+  const [commonAdjustmentsData, setCommonAdjustmentsData] = useState(DEFAULT_COMMON_ADJUSTMENTS);
 
-  const onSelectBuildingType = (buildingType) => setSelectedBuildingType(buildingType);
+  const buildingService = useMemo(() => BuildingService(), []);
 
-  // Обновляем функцию добавления для поддержки редактирования
+  useEffect(() => {
+    buildingService.getCommonAdjustments()
+      .then(setCommonAdjustmentsData)
+      .catch(() => setCommonAdjustmentsData(DEFAULT_COMMON_ADJUSTMENTS));
+  }, [buildingService]);
+
   const onAddToEstimation = (estimationData, editIndex = null) => {
     if (editIndex !== null) {
-      // Режим редактирования - обновляем существующий объект
       setEstimationList((prevList) => {
         const newList = [...prevList];
-        newList[editIndex - 1] = estimationData; // orderedNumber начинается с 1, но индекс с 0
+        newList[editIndex - 1] = estimationData;
         return newList;
       });
-    } else {
-      // Режим добавления - добавляем новый объект
-      setEstimationList([...estimationList, estimationData]);
+      setEditingBuilding(null);
+      return;
     }
+
+    setEstimationList((prevList) => [...prevList, estimationData]);
   };
 
-  // Функция для обработки редактирования объекта
   const handleEditBuilding = (buildingData) => {
     setEditingBuilding(buildingData);
   };
 
-  const handleSheetExpand = () => setIsSheetExpanded(true);
-
-  const handleSheetClose = () => setIsSheetExpanded(false);
-
   const handleDeleteBuilding = (orderedNumber) =>
-    setEstimationList((prevList) =>
-      prevList.filter((_, index) => index + 1 !== orderedNumber)
-    );
+    setEstimationList((prevList) => prevList.filter((_, index) => index + 1 !== orderedNumber));
 
   return (
     <ErrorBoundary>
@@ -64,24 +63,13 @@ const EvaluationPage = () => {
             </Grid>
             {estimationList.length > 0 && (
               <Grid item xs={12} md={5}>
-                <Paper
-                  elevation={3}
-                  sx={{
-                    height: '500px',
-                    p: 2,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'scale(1.02)',
-                    },
-                  }}
-                >
+                <Paper elevation={3} sx={{ height: '500px', p: 2, cursor: 'pointer' }}>
                   <ErrorBoundary>
                     <InsuranceAssessmentSheet
                       data={estimationList}
                       isExpanded={isSheetExpanded}
-                      onClose={handleSheetClose}
-                      onExpand={handleSheetExpand}
+                      onClose={() => setIsSheetExpanded(false)}
+                      onExpand={() => setIsSheetExpanded(true)}
                       onDeleteBuilding={handleDeleteBuilding}
                       onEditBuilding={handleEditBuilding}
                     />
@@ -95,10 +83,11 @@ const EvaluationPage = () => {
               <BuildingTypeList
                 buildingTypes={buildingTypes}
                 setBuildingTypes={setBuildingTypes}
-                onSelectBuildingType={onSelectBuildingType}
+                onSelectBuildingType={() => {}}
                 onAddToEstimation={onAddToEstimation}
                 editingBuilding={editingBuilding}
                 setEditingBuilding={setEditingBuilding}
+                commonAdjustmentsData={commonAdjustmentsData}
               />
             </Paper>
           </Box>
@@ -106,16 +95,11 @@ const EvaluationPage = () => {
         <Fab
           color="primary"
           aria-label="feedback"
-          sx={{
-            position: 'fixed',
-            bottom: 16,
-            right: 16,
-          }}
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
           onClick={() => setFeedbackOpen(true)}
         >
           <FeedbackIcon />
         </Fab>
-
         <FeedbackForm open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       </Container>
     </ErrorBoundary>
