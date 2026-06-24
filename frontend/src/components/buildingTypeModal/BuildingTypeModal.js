@@ -14,8 +14,15 @@ import {
   TextField,
   Box,
   Grid,
-  Checkbox
+  Checkbox,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Alert,
+  Paper,
+  Stack,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import { DEFAULT_COMMON_ADJUSTMENTS } from '../../data/commonAdjustments';
 import {
@@ -28,12 +35,16 @@ import {
   recalculateDimensions,
 } from '../../utils/appraisalCalculations';
 
+const formatMoney = (value) => Number(value || 0).toLocaleString('ru-RU', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
 const BuildingTypeModal = ({
   open,
   onClose,
   buildingType,
   onAddToEstimation,
-  setBuildingTypes,
   editData = null,
   commonAdjustmentsData = DEFAULT_COMMON_ADJUSTMENTS,
 }) => {
@@ -50,6 +61,13 @@ const BuildingTypeModal = ({
   });
   const [adjustmentQuantities, setAdjustmentQuantities] = useState({});
   const [totalCommonAdjustments, setTotalCommonAdjustments] = useState({ totalValue: 0, commonAdjustmentsList: [] });
+  const [expandedPanels, setExpandedPanels] = useState({
+    description: false,
+    dimensions: true,
+    baseCost: false,
+    adjustments: false,
+    commonAdjustments: false,
+  });
 
   const isEditMode = editData !== null;
   const normalizedNormAppliance = normalizeNormAppliance(buildingType?.normAppliance);
@@ -62,6 +80,13 @@ const BuildingTypeModal = ({
     setBuildingDimensions({ length: 0, width: 0, height: 0, cubic: 0, area: 0 });
     setAdjustmentQuantities({});
     setTotalCommonAdjustments({ totalValue: 0, commonAdjustmentsList: [] });
+    setExpandedPanels({
+      description: false,
+      dimensions: true,
+      baseCost: false,
+      adjustments: false,
+      commonAdjustments: false,
+    });
   }, []);
 
   const loadEditData = useCallback((data) => {
@@ -72,6 +97,13 @@ const BuildingTypeModal = ({
     setBuildingDimensions(data.dimensions || { length: 0, width: 0, height: 0, cubic: 0, area: 0 });
     setAdjustmentQuantities(data.adjustmentQuantities || {});
     setTotalCommonAdjustments(data.totalCommonAdjustments || { totalValue: 0, commonAdjustmentsList: [] });
+    setExpandedPanels({
+      description: false,
+      dimensions: true,
+      baseCost: true,
+      adjustments: Boolean(data.selectedAdjustments?.length),
+      commonAdjustments: Boolean(data.totalCommonAdjustments?.totalValue),
+    });
   }, []);
 
   useEffect(() => {
@@ -96,6 +128,7 @@ const BuildingTypeModal = ({
     const tierCost = findTierCost(buildingType.volumeBasedCosts, measurementValue);
     if (tierCost != null) {
       setSelectedBasedCost(String(tierCost));
+      setExpandedPanels((prev) => ({ ...prev, baseCost: true }));
     }
   }, [open, buildingType, buildingDimensions, normalizedNormAppliance, isEditMode]);
 
@@ -114,6 +147,8 @@ const BuildingTypeModal = ({
     totalCommonAdjustments.totalValue,
     wearRate,
   ]);
+
+  const wearRateError = wearRate < 0 || wearRate > 100;
 
   const handleClose = useCallback((event, reason) => {
     if (reason !== 'backdropClick') {
@@ -145,7 +180,6 @@ const BuildingTypeModal = ({
 
     onAddToEstimation(estimationData, isEditMode ? editData.orderedNumber : null);
     handleClose();
-    setBuildingTypes([]);
   }, [
     normalizedNormAppliance,
     buildingType,
@@ -161,7 +195,6 @@ const BuildingTypeModal = ({
     handleClose,
     isEditMode,
     editData,
-    setBuildingTypes,
   ]);
 
   const handleDimensionChange = useCallback((dimension, value) => {
@@ -206,115 +239,161 @@ const BuildingTypeModal = ({
     });
   }, []);
 
+  const handleAccordionChange = (panel) => (_, isExpanded) => {
+    setExpandedPanels((prev) => ({ ...prev, [panel]: isExpanded }));
+  };
+
   if (!buildingType) {
     return null;
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      scroll="paper"
+      PaperProps={{ sx: { maxHeight: '92vh' } }}
+    >
       <ErrorBoundary>
-        <DialogTitle>
+        <DialogTitle sx={{ pb: 1 }}>
           {isEditMode ? 'Редактирование: ' : ''}{buildingType.type}. {buildingType.name}
         </DialogTitle>
-        <DialogContent>
-          <Box>
-            <Typography variant="body1" paragraph>
-              <strong>Описание:</strong> {buildingType.description}
-            </Typography>
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Год постройки"
-                  value={buildingYear}
-                  onChange={(e) => setBuildingYear(e.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Процент износа"
-                  type="number"
-                  value={wearRate}
-                  onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  fullWidth
-                  label="Длина строения"
-                  type="number"
-                  value={buildingDimensions.length || ''}
-                  onChange={(e) => handleDimensionChange('length', e.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  fullWidth
-                  label="Ширина строения"
-                  type="number"
-                  value={buildingDimensions.width || ''}
-                  onChange={(e) => handleDimensionChange('width', e.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  fullWidth
-                  label="Высота строения"
-                  type="number"
-                  value={buildingDimensions.height || ''}
-                  onChange={(e) => handleDimensionChange('height', e.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Объем строения"
-                  type="number"
-                  value={buildingDimensions.cubic || ''}
-                  onChange={(e) => handleDimensionChange('cubic', e.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Площадь строения"
-                  type="number"
-                  value={buildingDimensions.area || ''}
-                  onChange={(e) => handleDimensionChange('area', e.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-            </Grid>
+        <DialogContent dividers sx={{ pb: 0 }}>
+          <Accordion
+            disableGutters
+            elevation={0}
+            expanded={expandedPanels.description}
+            onChange={handleAccordionChange('description')}
+            sx={{ '&:before': { display: 'none' } }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography fontWeight={600}>Описание типа</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant="body2" color="text.secondary">
+                {buildingType.description}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
 
-            <FormControl component="fieldset" fullWidth margin="normal">
-              <FormLabel component="legend">{`Базовая стоимость (${buildingType.basedCostsDependency})`}</FormLabel>
-              <RadioGroup
-                value={selectedBasedCost}
-                onChange={(e) => setSelectedBasedCost(e.target.value)}
-              >
-                {buildingType.volumeBasedCosts.map((basedCost, index) => (
-                  <FormControlLabel
-                    key={`${basedCost.volumeFrom}-${basedCost.cost}-${index}`}
-                    value={String(basedCost.cost)}
-                    control={<Radio />}
-                    label={formatTierLabel(basedCost)}
+          <Accordion
+            expanded={expandedPanels.dimensions}
+            onChange={handleAccordionChange('dimensions')}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography fontWeight={600}>1. Размеры и износ</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Alert severity="info" sx={{ mb: 2 }}>
+                Введите длину, ширину и высоту — объём и площадь рассчитаются автоматически.
+                Либо укажите объём/площадь напрямую.
+              </Alert>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Год постройки"
+                    value={buildingYear}
+                    onChange={(e) => setBuildingYear(e.target.value)}
                   />
-                ))}
-              </RadioGroup>
-            </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Процент износа"
+                    type="number"
+                    value={wearRate}
+                    error={wearRateError}
+                    helperText={wearRateError ? 'Износ должен быть от 0 до 100%' : ' '}
+                    onChange={(e) => setWearRate(parseFloat(e.target.value) || 0)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Длина, м"
+                    type="number"
+                    value={buildingDimensions.length || ''}
+                    onChange={(e) => handleDimensionChange('length', e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Ширина, м"
+                    type="number"
+                    value={buildingDimensions.width || ''}
+                    onChange={(e) => handleDimensionChange('width', e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Высота, м"
+                    type="number"
+                    value={buildingDimensions.height || ''}
+                    onChange={(e) => handleDimensionChange('height', e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Объём, куб.м"
+                    type="number"
+                    value={buildingDimensions.cubic || ''}
+                    onChange={(e) => handleDimensionChange('cubic', e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Площадь, кв.м"
+                    type="number"
+                    value={buildingDimensions.area || ''}
+                    onChange={(e) => handleDimensionChange('area', e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
 
-            <FormControl fullWidth margin="normal">
-              <FormLabel component="legend" sx={{ mb: 1.5, fontWeight: 'bold' }}>
-                Надбавки и скидки
-              </FormLabel>
+          <Accordion
+            expanded={expandedPanels.baseCost}
+            onChange={handleAccordionChange('baseCost')}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography fontWeight={600}>2. Базовая норма ({buildingType.basedCostsDependency})</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <FormControl component="fieldset" fullWidth>
+                <RadioGroup
+                  value={selectedBasedCost}
+                  onChange={(e) => setSelectedBasedCost(e.target.value)}
+                >
+                  {buildingType.volumeBasedCosts.map((basedCost, index) => (
+                    <FormControlLabel
+                      key={`${basedCost.volumeFrom}-${basedCost.cost}-${index}`}
+                      value={String(basedCost.cost)}
+                      control={<Radio />}
+                      label={formatTierLabel(basedCost)}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion
+            expanded={expandedPanels.adjustments}
+            onChange={handleAccordionChange('adjustments')}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography fontWeight={600}>3. Надбавки и скидки типа</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
               {buildingType.adjustments?.length ? (
                 buildingType.adjustments.map((adjustment, index) => {
                   const isSelected = selectedAdjustments.some((item) => (
@@ -336,16 +415,21 @@ const BuildingTypeModal = ({
                   );
                 })
               ) : (
-                <Typography variant="body2" color="textSecondary" sx={{ fontStyle: 'italic' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
                   Надбавки и скидки не установлены для данного типа строения
                 </Typography>
               )}
-            </FormControl>
+            </AccordionDetails>
+          </Accordion>
 
-            <FormControl fullWidth margin="normal">
-              <FormLabel component="legend" sx={{ mb: 1.5, fontWeight: 'bold' }}>
-                Общие надбавки
-              </FormLabel>
+          <Accordion
+            expanded={expandedPanels.commonAdjustments}
+            onChange={handleAccordionChange('commonAdjustments')}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography fontWeight={600}>4. Общие надбавки</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
               {commonAdjustmentsData.map((adjustment) => (
                 <Box key={adjustment.element} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                   <FormControlLabel
@@ -370,62 +454,61 @@ const BuildingTypeModal = ({
                   )}
                 </Box>
               ))}
-            </FormControl>
-
-            <TextField
-              fullWidth
-              label="Сумма общих надбавок"
-              type="number"
-              value={totalCommonAdjustments.totalValue || ''}
-              margin="normal"
-              InputProps={{ readOnly: true }}
-            />
-
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  label="Норма с учетом отклонений"
-                  value={appraisalResult.basedCostWithAdjustments}
-                  margin="normal"
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  label="Оценка строения"
-                  value={appraisalResult.buildingAppraisal}
-                  margin="normal"
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  label="Оценка с учетом износа"
-                  value={appraisalResult.buildingAppraisalWithWear}
-                  margin="normal"
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  fullWidth
-                  label="Страховая сумма"
-                  value={appraisalResult.insuredValue}
-                  margin="normal"
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
+              <TextField
+                fullWidth
+                label="Сумма общих надбавок"
+                value={totalCommonAdjustments.totalValue || ''}
+                margin="normal"
+                InputProps={{ readOnly: true }}
+              />
+            </AccordionDetails>
+          </Accordion>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>ЗАКРЫТЬ</Button>
-          <Button onClick={handleAddToEstimation} color="primary" disabled={!selectedBasedCost}>
-            {isEditMode ? 'СОХРАНИТЬ ИЗМЕНЕНИЯ' : 'ДОБАВИТЬ В ОЦЕНОЧНЫЙ ЛИСТ'}
-          </Button>
+
+        <DialogActions
+          sx={{
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            gap: 2,
+            px: 3,
+            py: 2,
+            borderTop: 1,
+            borderColor: 'divider',
+            bgcolor: 'grey.50',
+          }}
+        >
+          <Paper variant="outlined" sx={{ p: 2, bgcolor: 'background.paper' }}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              justifyContent="space-between"
+              divider={<Box sx={{ display: { xs: 'none', sm: 'block' }, width: 1, bgcolor: 'divider' }} />}
+            >
+              <Box>
+                <Typography variant="caption" color="text.secondary">Оценка строения</Typography>
+                <Typography variant="h6">{formatMoney(appraisalResult.buildingAppraisal)} руб.</Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary">С учётом износа</Typography>
+                <Typography variant="h6">{formatMoney(appraisalResult.buildingAppraisalWithWear)} руб.</Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary">Страховая сумма</Typography>
+                <Typography variant="h6" color="primary.main">{formatMoney(appraisalResult.insuredValue)} руб.</Typography>
+              </Box>
+            </Stack>
+          </Paper>
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+            <Button onClick={handleClose}>Отмена</Button>
+            <Button
+              onClick={handleAddToEstimation}
+              variant="contained"
+              disabled={!selectedBasedCost || wearRateError}
+            >
+              {isEditMode ? 'Сохранить изменения' : 'Добавить в лист'}
+            </Button>
+          </Box>
         </DialogActions>
       </ErrorBoundary>
     </Dialog>

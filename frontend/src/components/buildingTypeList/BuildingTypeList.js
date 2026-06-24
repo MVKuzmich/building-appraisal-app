@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   List,
-  ListItem,
+  ListItemButton,
+  ListItemText,
   Typography,
-  Paper,
   Button,
   Box,
-  Tooltip,
   CircularProgress,
+  Alert,
+  Divider,
 } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import BuildingTypeModal from '../buildingTypeModal/BuildingTypeModal';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import BuildingService from '../../services/BuildingsService';
 
 const BuildingTypeList = ({
   buildingTypes,
-  setBuildingTypes,
-  onSelectBuildingType,
+  searchMeta,
   onAddToEstimation,
   editingBuilding,
   setEditingBuilding,
@@ -30,7 +31,6 @@ const BuildingTypeList = ({
   const handleOpenModal = (buildingType) => {
     setSelectedBuildingType(buildingType);
     setModalOpen(true);
-    onSelectBuildingType(buildingType);
   };
 
   const handleCloseModal = () => {
@@ -41,7 +41,7 @@ const BuildingTypeList = ({
 
   useEffect(() => {
     if (!editingBuilding || modalOpen) {
-      return;
+      return undefined;
     }
 
     let isCancelled = false;
@@ -53,12 +53,10 @@ const BuildingTypeList = ({
         if (isCancelled) {
           return;
         }
-
         setSelectedBuildingType(fullBuildingType);
         setModalOpen(true);
-        onSelectBuildingType(fullBuildingType);
-      } catch (error) {
-        console.error('Не удалось загрузить тип строения для редактирования', error);
+      } catch (loadError) {
+        console.error('Не удалось загрузить тип строения для редактирования', loadError);
       } finally {
         if (!isCancelled) {
           setIsLoadingEditType(false);
@@ -71,14 +69,43 @@ const BuildingTypeList = ({
     return () => {
       isCancelled = true;
     };
-  }, [editingBuilding, modalOpen, getBuildingTypeById, onSelectBuildingType]);
+  }, [editingBuilding, modalOpen, getBuildingTypeById]);
+
+  const renderEmptyState = () => {
+    if (!searchMeta?.hasSearched) {
+      return null;
+    }
+
+    if (searchMeta.isEmptyQuery) {
+      return (
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          Введите номер типа или название строения.
+        </Alert>
+      );
+    }
+
+    if (buildingTypes.length === 0) {
+      return (
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          Ничего не найдено. Попробуйте изменить запрос.
+        </Alert>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <ErrorBoundary>
-      <Paper elevation={3} sx={{ maxWidth: '1200px', width: '100%', mx: 'auto', p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Типы строений
-        </Typography>
+      <Box sx={{ mt: 3 }}>
+        <Divider sx={{ mb: 2 }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+          <Typography variant="subtitle1" fontWeight={600}>
+            {searchMeta?.hasSearched
+              ? `Результаты поиска (${buildingTypes.length})`
+              : 'Результаты поиска'}
+          </Typography>
+        </Box>
 
         {isLoadingEditType && (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
@@ -86,27 +113,36 @@ const BuildingTypeList = ({
           </Box>
         )}
 
-        <List sx={{ maxHeight: '600px', overflow: 'auto' }}>
-          {buildingTypes.map((buildingType) => (
-            <ListItem key={buildingType.type} divider>
-              <Box display="flex" alignItems="center" width="100%">
-                <Tooltip title={`${buildingType.type}. ${buildingType.name}`} placement="top-start">
-                  <Typography noWrap sx={{ flexGrow: 1, maxWidth: '900px' }}>
-                    {buildingType.type}. {buildingType.name}
-                  </Typography>
-                </Tooltip>
+        {renderEmptyState()}
+
+        {buildingTypes.length > 0 && (
+          <List dense sx={{ maxHeight: 420, overflow: 'auto', bgcolor: 'background.paper', borderRadius: 1 }}>
+            {buildingTypes.map((buildingType) => (
+              <ListItemButton
+                key={buildingType.type}
+                onClick={() => handleOpenModal(buildingType)}
+                sx={{ borderBottom: 1, borderColor: 'divider' }}
+              >
+                <ListItemText
+                  primary={`${buildingType.type}. ${buildingType.name}`}
+                  secondary="Нажмите, чтобы заполнить параметры"
+                  primaryTypographyProps={{ noWrap: true }}
+                />
                 <Button
-                  variant="outlined"
                   size="small"
-                  onClick={() => handleOpenModal(buildingType)}
-                  sx={{ whiteSpace: 'nowrap', fontSize: '0.8rem', minWidth: '100px' }}
+                  variant="outlined"
+                  endIcon={<ChevronRightIcon />}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleOpenModal(buildingType);
+                  }}
                 >
-                  ОТКРЫТЬ ТИП
+                  Заполнить
                 </Button>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
+              </ListItemButton>
+            ))}
+          </List>
+        )}
 
         {selectedBuildingType && (
           <BuildingTypeModal
@@ -114,12 +150,11 @@ const BuildingTypeList = ({
             onClose={handleCloseModal}
             buildingType={selectedBuildingType}
             onAddToEstimation={onAddToEstimation}
-            setBuildingTypes={setBuildingTypes}
             editData={editingBuilding}
             commonAdjustmentsData={commonAdjustmentsData}
           />
         )}
-      </Paper>
+      </Box>
     </ErrorBoundary>
   );
 };
