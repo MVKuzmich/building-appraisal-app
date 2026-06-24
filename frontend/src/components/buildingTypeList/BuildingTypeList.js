@@ -25,7 +25,7 @@ const BuildingTypeList = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBuildingType, setSelectedBuildingType] = useState(null);
   const [isLoadingEditType, setIsLoadingEditType] = useState(false);
-  const { getBuildingTypeById } = useMemo(() => BuildingService(), []);
+  const { getBuildingTypeById } = BuildingService();
 
   const handleOpenModal = (buildingType) => {
     setSelectedBuildingType(buildingType);

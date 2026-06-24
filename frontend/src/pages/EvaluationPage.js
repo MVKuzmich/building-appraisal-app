@@ -19,7 +19,7 @@ const EvaluationPage = () => {
   const [editingBuilding, setEditingBuilding] = useState(null);
   const [commonAdjustmentsData, setCommonAdjustmentsData] = useState(DEFAULT_COMMON_ADJUSTMENTS);
 
-  const buildingService = useMemo(() => BuildingService(), []);
+  const buildingService = BuildingService();
 
   useEffect(() => {
     buildingService.getCommonAdjustments()
